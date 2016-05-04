@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>One-Bit Maximal Matching on a Ring</title>
+</head>
+<body>
+<div class="cjust">
+<h1>One-Bit Maximal Matching on a Ring</h1>
+</div>
+<p><a href="http://en.wikipedia.org/wiki/Matching_(graph_theory)">Matching</a> is well-known problem from graph theory.
+A matching is a set of edges which do not share any common vertices.
+For a matching to be  <i>maximal</i>, it must be impossible to add another edge to the set without breaking the matching property.</p><h3>Contents</h3>
+<ol class="cram">
+<li><a href="#sec:MatchRing">1-Bit Maximal Matching on a Ring</a></li>
+<li><a href="#sec:MatchRingThreeState">3-State Maximal Matching on a Ring</a>
+<ol>
+<li><a href="#sec:MatchRingOneBit">Deriving 1-Bit Protocol from 3-State Protocol</a></li>
+<li><a href="#sec:2.2">Using Shadow/Puppet Variables</a></li></ol></li>
+<li><a href="#sec:SegmentRing">Segmented Ring</a></li></ol>
+<h3 id="sec:MatchRing">1. 1-Bit Maximal Matching on a Ring</h3>
+<p><b>MatchRing.</b>
+(<a href="./../examplespec/MatchRing.prot">spec</a>,
+<a href="./../examplesett/MatchRing.args">args</a>,
+<a href="./../examplesynt/MatchRing.prot">synt</a>
+<a href="./../examplesoln/MatchRingOneBit.prot">soln</a>)</p>
+<p>In the specification, the <i>e</i> variables denote whether an edge is in the matching.
+The invariant specified as a maximal matching, which can be restated as the following two conditions for the special case of a ring:</p><ol class="cram"><li> No two adjacent edges can be selected.</li>
+<li> At least one of every three consecutive edges must be selected.</li>
+</ol>
+<p><b>Synthesis.</b>
+Processes cannot realistically write to edge variables, therefore the <i>e</i> variables are marked as <code>shadow</code> and their values must be derived from <i>x</i> values owned by processes.
+For an instructive look at how this works see <a href="#sec:MatchRingOneBit">the next section</a>, which derives the same protocol from a slightly different way of specifying the maximal matching property.</p>
+<p><b>Stabilization Proof.</b>
+It is fairly easy to show that the 1-bit matching protocol is stabilizing.
+First we will show that all executions terminate.
+Then we will show that all silent states belong to the invariant.
+From the <a href="./../examplesoln/MatchRingOneBit.prot">protocol</a>, we see that each <i>P[i]</i> has the following actions:</p>
+<pre class="cram"><code>(              x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; )
+( x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==0 --&gt; x[i]:=1; )</code></pre>
+<p>We can analyze the actions to see that the protocol is livelock-free.
+The first action of <i>P[i]</i> removes cases of <i>2</i> consecutive <i>1</i> values by changing the left value to <i>0</i>.
+This may enable the second action of <i>P[i-1]</i>.
+The second action of <i>P[i]</i> removes cases of <i>3</i> consecutive <i>0</i> values by changing the middle value to <i>1</i>.
+If <i>P[i]</i> executes its section action neither it or its neighbors is enabled!
+Therefore, actions may propagate by changing consecutive <i>1</i>s to <i>0</i>s, and some of the resulting <i>0</i>s may toggle back to <i>1</i>s, but the <i>1</i>s will not be consecutive.</p>
+<p>Clearly the silent states are those where no <i>2</i> consecutive <i>1</i>s exist and no <i>3</i> consecutive <i>0</i>s exist.
+That means a <i>1</i> must occur at least every <i>3</i> values and will be followed by a <i>0</i>.
+We can therefore interpret a <i>1</i> value followed by a <i>0</i> value to mean that the edge between the two values is selected.
+These edges are not consecutive and at least on of every <i>3</i> will be selected, therefore it is a maximal matching.</p>
+<pre class="cram"><code>forall i &lt;- Nat % N :
+   x[i-1]==1 &amp;&amp; x[i]==0               // P[i] matched with P[i-1]
+|| x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==1  // P[i] is not matched
+||              x[i]==1 &amp;&amp; x[i+1]==0  // P[i] matched with P[i+1]</code></pre>
+<h3 id="sec:MatchRingThreeState">2. 3-State Maximal Matching on a Ring</h3>
+<p><b>MatchRingThreeState.</b>
+(<a href="./../examplespec/MatchRingThreeState.prot">spec</a>,
+<a href="./../examplesett/MatchRingThreeState.args">args</a>,
+<a href="./../examplesoln/MatchRingThreeState.prot">soln</a>)</p>
+<p>Matching can also be reasoned about in terms of processes.
+Allow each process <i>P[i]</i> in a ring to point to <i>P[i-1]</i>, itself, or <i>P[i+1]</i>.
+Let these directions be denoted by having <i>P[i]</i>'s variable <i>m[i]</i> have a value of <i>L</i>, <i>S</i>, and <i>R</i> respectively.
+The processes form a maximal matching when they point to each other or themselves, but no two neighboring processes can both point to themselves.</p>
+<pre class="cram"><code>forall i &lt;- Nat % N :
+   m[i-1]==R &amp;&amp; m[i]==L               // P[i] pointing to P[i-1] and P[i-1] pointing back
+|| m[i-1]==L &amp;&amp; m[i]==S &amp;&amp; m[i+1]==R  // P[i] pointing to itself and neighbors pointing away
+||              m[i]==R &amp;&amp; m[i+1]==L  // P[i] pointing to P[i+1] and P[i+1] pointing back</code></pre>
+<p>One stabilizing protocol has the actions:</p>
+<pre class="cram"><code>( m[i-1]==2 &amp;&amp; m[i]!=0 &amp;&amp; m[i+1]!=0 --&gt; m[i]:=0; )
+( m[i-1]!=2 &amp;&amp; m[i]!=1 &amp;&amp; m[i+1]==2 --&gt; m[i]:=1; )
+( m[i-1]!=2 &amp;&amp; m[i]!=2 &amp;&amp; m[i+1]!=2 --&gt; m[i]:=2; )</code></pre>
+<h4 id="sec:MatchRingOneBit">2.1. Deriving 1-Bit Protocol from 3-State Protocol</h4>
+<p><b>MatchRingOneBit.</b>
+(<a href="./../examplespec/MatchRingOneBit.prot">spec</a>,
+<a href="./../examplesynt/MatchRingOneBit.prot">synt</a>,
+<a href="./../examplesoln/MatchRingOneBit.prot">soln</a>)</p>
+<p>This section explains shadow/puppet synthesis as a special case of superposition.
+In the <a href="#sec:MatchRing">previous section</a>, we saw that a protocol could achieve a matching using only 1 bit per process.
+How could this be derived?
+From the above 3-state protocol, it seems that each process needs to be able to point in <i>3</i> directions.</p>
+<p>Give each process <i>P[i]</i> a binary <i>x[i]</i> variable to perform the protocol along with a ternary <i>m[i]</i> variable used to specify the invariant.
+Furthermore, <i>P[i]</i> is given read access to <i>x[i-1]</i> and <i>x[i+1]</i>, but it cannot read <i>m[i-1]</i> or <i>m[i+1]</i>.</p>
+<p>We use the previous section's invariant on the underlying <i>m</i> variables.
+Since processes only know their own <i>m</i> values, the protocol is forced to use <i>x</i> values to negotiate appropriate <i>m</i> values.
+Our invariant style (the <code>((future &amp; silent) % puppet)</code> style) allows closure to be violated for some (but not all) valuations of <i>x</i> variables.</p>
+<pre class="cram"><code>constant N := 3;
+
+constant L := 0;
+constant S := 1;
+constant R := 2;
+
+// Superposed binary variables.
+puppet variable x[Nat % N] &lt;- Nat % 2;
+
+// Underlying ternary variables.
+direct variable m[Nat % N] &lt;- Nat % 3;
+
+// The following cases are P[i] pointing
+// to P[i-1], itself, or P[i+1] respectively.
+((future &amp; silent) % puppet)
+  (forall i &lt;- Nat % N :
+      m[i-1]==R &amp;&amp; m[i]==L
+   || m[i-1]==L &amp;&amp; m[i]==S &amp;&amp; m[i+1]==R
+   ||              m[i]==R &amp;&amp; m[i+1]==L
+  );
+
+process P[i &lt;- Nat % N]
+{
+  read: x[i-1];
+  write: x[i];
+  read: x[i+1];
+  write: m[i];
+}
+</code></pre>
+<p>From synthesis, <a href="./../examplesynt/MatchRingOneBit.prot">one of the protocols</a> we get is the following.</p>
+<pre class="cram"><code>( x[i-1]==1 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; m[i]:=L; )
+( x[i-1]==0 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; m[i]:=S; )
+( x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==0 --&gt; x[i]:=1; m[i]:=R; )
+
+( x[i-1]==1 &amp;&amp; x[i]==0              &amp;&amp; m[i]!=L --&gt; m[i]:=L; )
+( x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==1 &amp;&amp; m[i]!=S --&gt; m[i]:=S; )
+( x[i-1]==0 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==0 &amp;&amp; m[i]!=R --&gt; m[i]:=R; )</code></pre>
+<p>From here, we can create the 1-bit matching protocol on the <i>x[i]</i> variables without the <i>m[i]</i>s.
+The first three actions of the synthesized protocol change <i>x[i]</i> and are therefore used as actions in our 1-bit matching protocol, discarding changes to <i>m[i]</i>.</p>
+<pre class="cram"><code>( x[i-1]==1 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; )
+( x[i-1]==0 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; )
+( x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==0 --&gt; x[i]:=1; )</code></pre>
+<p>The invariant is all states where the <i>x[i]</i> values don't change (see the last three actions above).</p>
+<pre class="cram"><code>forall i &lt;- Nat % N :
+   x[i-1]==1 &amp;&amp; x[i]==0               // P[i] pointing to P[i-1] and P[i-1] pointing back
+|| x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==1  // P[i] pointing to itself and neighbors pointing away
+|| x[i-1]==0 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==0  // P[i] pointing to P[i+1] and P[i+1] pointing back</code></pre>
+<p class="cram">Each of these cases in the disjunction corresponds to <i>P[i]</i> pointing to <i>P[i-1]</i>, itself, and <i>P[i+1]</i> respectively.
+We know this by looking at how <i>m[i]</i> is changed to be <code>m[i]:=L</code>, <code>m[i]:=S</code>, and <code>m[i]:=R</code> in the synthesized protocol.</p>
+<p>Note that the third case in the disjunction can be simplified from <code>x[i-1]==0 &amp;&amp; x[i]==1 &amp;&amp; x[i+1]==0</code> to <code>x[i]==1 &amp;&amp; x[i+1]==0</code> since if the formula holds for <i>P[i]</i> and the system is in the invariant, then the first or second cases in the disjunction must hold for <i>P[i-1]</i> (hence, <i>x[i-1]=0</i>).</p>
+<p>Putting this all together, we get:</p>
+<pre class="cram"><code>
+// Maximal Matching on a ring
+// 1-bit per process
+
+constant N := 3;
+
+variable x[Nat % N] &lt;- Nat % 2;
+
+process P[i &lt;- Nat % N]
+{
+  read: x[i-1];
+  write: x[i];
+  read: x[i+1];
+
+  (future &amp; silent)
+    (   x[i-1]==1 &amp;&amp; x[i]==0               // P[i] matched with P[i-1]
+     || x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==1  // P[i] is not matched
+     ||              x[i]==1 &amp;&amp; x[i+1]==0  // P[i] matched with P[i+1]
+    );
+
+  puppet action:
+    (              x[i]==1 &amp;&amp; x[i+1]==1 --&gt; x[i]:=0; )
+    ( x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==0 --&gt; x[i]:=1; )
+    ;
+}
+</code></pre>
+<h4 id="sec:2.2">2.2. Using Shadow/Puppet Variables</h4>
+<p>Shadow variables are variables that cannot be used in the guard of any actions.
+Therefore, to reliably obtain a protocol that is free of <i>m</i> variables, we must mark them as shadow variables by replacing <code>direct</code> with <code>shadow</code> in the <a href="./../examplespec/MatchRingOneBit.prot">specification</a>.
+This is essentially what is done in the <a href="#sec:MatchRing">previous section</a>, but a more convenient invariant is used.</p>
+<h3 id="sec:SegmentRing">3. Segmented Ring</h3>
+<p><b>SegmentRing.</b>
+(<a href="./../examplespec/SegmentRing.prot">spec</a>,
+<a href="./../examplesett/SegmentRing.args">args</a>,
+<a href="./../examplesynt/SegmentRing.prot">synt</a>)</p>
+<p>This is a problem similar to matching where a ring is segmented into chains.</p>
+</body>
+</html>

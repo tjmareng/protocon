@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Synthesis Benchmarks</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Synthesis Benchmarks</h1>
+</div>
+<p>These results have been obtained on the  <b>Superior</b> cluster at Michigan Tech (CPU: Intel E5-2670 2.60 GHz).
+Settings are tuned to obtain protocols that appear to be generalizable.
+That is, the resulting protocols are stabilizing for more processes than were considered during synthesis, but we do not prove that they are stabilizing for arbitrary numbers of processes.</p>
+<table>
+<tr>
+<td class="rline"></td>
+<td class="cjust rline"><div class="cjust"> <b>Protocol</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Compute</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Compute</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Peak</b></div></td>
+<td></td>
+</tr>
+<tr>
+<td class="rline"><div class="cjust"> <b>Protocol</b></div></td>
+<td class="cjust rline"><div class="cjust"> <b>Processes</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Processes</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Time</b></div></td>
+<td class="rjust rline"><div class="cjust"> <b>Memory</b></div></td>
+<td> <b>Notes</b></td>
+</tr>
+<tr class="hline">
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenRingThreeState">3-State Token Ring (Dijkstra)</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenRingThreeState.args">2&ndash;5</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">9.300s </td>
+<td class="rjust rline">90.6&nbsp;MB </td>
+<td>Bidirectional ring.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenChainThreeState">3-State Token Chain</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenChainThreeState.args">2&ndash;5</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">29.310s </td>
+<td class="rjust rline">101.3&nbsp;MB </td>
+<td>Bidirectional chain (line). Allows actions that do not pass a token.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenChainDijkstra">4-State Token Chain (Dijkstra)</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenChainDijkstra.args">2&ndash;4</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">6.548s </td>
+<td class="rjust rline">66.4&nbsp;MB </td>
+<td>Bidirectional chain (line).</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenRingFiveState">5-State Token Ring</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenRingFiveState.args">2&ndash;9</a></td>
+<td class="rjust rline">
+8 </td>
+<td class="rjust rline">12m54.684s </td>
+<td class="rjust rline">153.4&nbsp;MB </td>
+<td></td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenRingSixState">6-State Token Ring</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenRingSixState.args">2&ndash;9</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">20m17.846s </td>
+<td class="rjust rline">266.6&nbsp;MB </td>
+<td>Allows actions that do not pass a token.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/TokenPassing.html#sec:TokenRingThreeBit">3-Bit Token Ring (Gouda and Haddix)</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/TokenRingThreeBit.args">2&ndash;9</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">17m17.564s </td>
+<td class="rjust rline">495.7&nbsp;MB </td>
+<td>Allows actions that do not pass a token.</td>
+</tr>
+<tr class="hline">
+<td class="rline"><a class="texturl" href="example/Orientation.html#sec:OrientRingOdd">Odd-Sized Ring Orientation (Hoepman)</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/OrientRingOdd.args">3,5,7</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">34m05.289s </td>
+<td class="rjust rline">104.7&nbsp;MB </td>
+<td>Only works for rings of odd-size. Not necessarily silent.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/Orientation.html#sec:OrientRing">Ring Orientation</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/OrientRing.args">2&ndash;9</a></td>
+<td class="rjust rline">
+16 </td>
+<td class="rjust rline">13m52.606s </td>
+<td class="rjust rline">169.6&nbsp;MB </td>
+<td>Works with synchronous and asynchronous schedulers.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/Orientation.html#sec:OrientDaisy">Daisy Chain Orientation</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/OrientDaisy.args">2&ndash;6</a></td>
+<td class="rjust rline">
+1 </td>
+<td class="rjust rline">2m01.112s </td>
+<td class="rjust rline">78.8&nbsp;MB </td>
+<td>Works on ring and chain topologies.</td>
+</tr>
+<tr class="hline">
+<td class="rline">Stop-and-Wait</td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/StopAndWait.args">2</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">3m03.217s </td>
+<td class="rjust rline">101.9&nbsp;MB </td>
+<td>Ternary version of the alternating-bit protocol.</td>
+</tr>
+<tr class="hline">
+<td class="rline"><a class="texturl" href="example/Coloring.html#sec:ColorRing">3-Coloring on Ring</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/ColorRing.args">2&ndash;5</a></td>
+<td class="rjust rline">
+1 </td>
+<td class="rjust rline">0.067s  </td>
+<td class="rjust rline">38.5&nbsp;MB </td>
+<td></td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/Coloring.html#sec:ColorRingDistrib">Distributed 3-Coloring on Ring</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/ColorRingDistrib.args">2&ndash;4</a></td>
+<td class="rjust rline">
+1 </td>
+<td class="rjust rline">24.786s </td>
+<td class="rjust rline">75.7&nbsp;MB </td>
+<td>A 1-capacity buffer between each process. Uses randomization.</td>
+</tr>
+<tr>
+<td class="rline"><a class="texturl" href="example/Coloring.html#sec:ColorRingLocal">Distance-2 5-Coloring on Ring</a></td>
+<td class="cjust rline">
+<a class="texturl" href="./examplesett/ColorRingLocal.args">3&ndash;5</a></td>
+<td class="rjust rline">
+4 </td>
+<td class="rjust rline">7m24.513s </td>
+<td class="rjust rline">810.8&nbsp;MB </td>
+<td>Uses randomization.</td>
+</tr>
+</table>
+<table>
+<tr>
+<td class="cjust"><img src="http://www.nsf.gov/images/logos/nsf1.gif" /></td>
+<td>
+This work is sponsored by the NSF grant CCF-1116546.
+Any opinions, findings, and conclusions or recommendtions expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.</td>
+</tr>
+</table>
+</body>
+</html>

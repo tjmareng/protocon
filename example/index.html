@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Example List</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Example List</h1>
+</div>
+<p>Example files are given in three directories: (1) <a href="./../examplespec">examplespec</a> contains problem specifications, (2) <a href="./../examplesoln">examplesoln</a> contains solutions, and (3) <a href="./../examplesynt">examplesynt</a> contains solutions which retain artifacts from the specification.
+For each file in <a href="./../examplesynt">examplesynt</a>, there is usually a corresponding file in <a href="./../examplesoln">examplesoln</a> which is more presentable and simpler to verify.</p><h3>Contents</h3>
+<ol class="cram">
+<li><a href="#sec:1">Sum-Not-2</a></li>
+<li><a href="#sec:2">Coloring</a></li>
+<li><a href="#sec:3">Maximal Matching</a></li>
+<li><a href="#sec:4">Sorting on Chains and Rings</a></li>
+<li><a href="#sec:5">Orientation</a></li>
+<li><a href="#sec:6">Token Passing</a></li>
+<li><a href="#sec:7">Other</a></li></ol>
+<h3 id="sec:1">1. Sum-Not-2</h3>
+<p>Aly Farahat's <a href="http://digitalcommons.mtu.edu/etds/178">dissertation</a> includes a simple yet nontrivial unidirectional ring protocol.
+It has been extremely helpful for reasoning about the nature of <a href="http://dx.doi.org/10.1007/978-3-319-03089-0_12">livelocks in unidirectional rings</a> and has a simple enough transition system to actually show in a presentation.</p><ul class="cram"><li> SumNotTwo (<a href="./../examplespec/SumNotTwo.prot">spec</a>)</li>
+<li> SumNotTarget (<a href="./../examplespec/SumNotTarget.prot">spec</a>, <a href="./../examplesoln/SumNotTarget.prot">soln</a>)
+- The general case sum-not-<i>(l-1)</i> protocol given by Farahat.</li>
+</ul>
+<h3 id="sec:2">2. Coloring</h3>
+<p><a href="http://en.wikipedia.org/wiki/Graph_coloring">Graph coloring</a> is a well-known problem with many applications.
+Each node in the graph is assigned a color.
+For this assignment to be called a  <i>coloring</i>, each node must have a different color than the nodes adjacent to it.
+In a computer network, a coloring applies to processes that communicate directly with each other rather than nodes connected by edges.</p><ul class="cram"><li> ColorRing <a href="Coloring.html#sec:ColorRing">[info]</a>
+- 3-coloring on a ring.</li>
+<li> ColorRingSymm (<a href="./../examplespec/ColorRingSymm.prot">spec</a>, <a href="./../examplesoln/ColorRingSymm.prot">soln</a>)
+- Unoriented ring.</li>
+<li> ColorUniRing (<a href="./../examplespec/ColorUniRing.prot">spec</a>, <a href="./../examplesoln/ColorUniRing.prot">soln</a>)
+- Randomized 3-coloring on a unidirectional ring.</li>
+<li> ColorRingLocal <a href="Coloring.html#sec:ColorRingLocal">[info]</a>
+- Randomized distance-2 coloring on a unidirectional ring using <i>5</i> colors.
+Neither a process or its neighbors can have the same color as another neighbor.</li>
+<li> ColorRingDistrib <a href="Coloring.html#sec:ColorRingDistrib">[info]</a>
+- Randomized 3-coloring on a ring where processes have communication delay.</li>
+<li> ColorChain (<a href="./../examplespec/ColorChain.prot">spec</a>)
+- 2-coloring on a chain.</li>
+<li> ColorTree (<a href="./../examplespec/ColorTree.prot">spec</a>, <a href="./../examplesoln/ColorTree.prot">soln</a>)
+- Tree.</li>
+<li> ColorTorus (<a href="./../examplespec/ColorTorus.prot">spec</a>)
+- Torus.</li>
+<li> ColorMobius (<a href="./../examplespec/ColorMobius.prot">spec</a>)
+- Mobius ladder.</li>
+<li> ColorKautz (<a href="./../examplespec/ColorKautz.prot">spec</a>)
+- 4-coloring on generalized Kautz graph of degree 2.
+We can find a protocol that stabilizes for up to <i>13</i> processes, but not <i>14</i>.
+Tweaking the topology by
+<a href="./../examplespec/ColorKautzReverse.prot">reversing edges</a>
+or
+<a href="./../examplespec/ColorKautzSymm.prot">removing orientation</a>
+(even with <a href="./../examplespec/ColorKautzBi.prot">bidirectional edges</a>)
+gives definite impossibility results at around <i>8</i> processes.</li>
+</ul>
+<h3 id="sec:3">3. Maximal Matching</h3>
+<p><a href="http://en.wikipedia.org/wiki/Matching_(graph_theory)">Matching</a> is well-known problem from graph theory.
+A matching is a set of edges which do not share any common vertices.
+For a matching to be  <i>maximal</i>, it must be impossible to add another edge to the set without breaking the matching property.</p><ul class="cram"><li> MatchRing <a href="Matching.html#sec:MatchRing">[info]</a>
+- Natural specification for matching using the edges in the ring.
+This gives the 1-bit solution.</li>
+<li> MatchRingThreeState <a href="Matching.html#sec:MatchRingThreeState">[info]</a>
+- Maximal matching on a ring where processes point in certain directions.</li>
+<li> MatchRingOneBit <a href="Matching.html#sec:MatchRingOneBit">[info]</a>
+- Using the 3-state specification, find a matching using 1 bit per process.</li>
+<li> SegmentRing <a href="Matching.html#sec:SegmentRing">[info]</a>
+- A problem similar to matching where a ring is segmented into chains.</li>
+</ul>
+<h3 id="sec:4">4. Sorting on Chains and Rings</h3><ul><li> SortChain (<a href="./../examplespec/SortChain.prot">spec</a>, <a href="./../examplesoln/SortChain.prot">soln</a>)
+- Sorting a chain of values.
+Easy to synthesize, but solution is manually simplified.</li>
+<li> SortRing (<a href="./../examplespec/SortRing.prot">spec</a>, <a href="./../examplesoln/SortRing.prot">soln</a>)
+- Sorting a ring of values using a unique zero value to mark the beginning of the sequence.
+Easy to synthesize, but solution is manually simplified.</li>
+</ul>
+<h3 id="sec:5">5. Orientation</h3><ul><li> OrientDaisy <a href="Orientation.html#sec:OrientDaisy">[info]</a>
+- Silent orientation for daisy chains (either ring and chain), verified for <i>2</i> to <i>15</i> processes.
+The version in <a href="./../examplesoln">examplesoln</a> behaves similarly, is simpler, but is slightly less optimal.</li>
+<li> OrientRing <a href="Orientation.html#sec:OrientRing">[info]</a>
+- Manually designed silent ring orientation, verified for <i>2</i> to <i>26</i> processes.
+Also works under synchronous scheduler.</li>
+<li> OrientRingOdd <a href="Orientation.html#sec:OrientRingOdd">[info]</a>
+- From <a href="http://dx.doi.org/10.1007/BFb0020439">Hoepman</a>.</li>
+<li> OrientRingViaToken (<a href="./../examplespec/OrientRingViaToken.prot">spec</a>, <a href="./../examplesoln/OrientRingViaToken.prot">soln</a>)
+- From <a href="http://dx.doi.org/10.1006/inco.1993.1029">Israeli and Jalfon</a>.</li>
+</ul>
+<h3 id="sec:6">6. Token Passing</h3><ul><li> TokenRingFiveState <a href="TokenPassing.html#sec:TokenRingFiveState">[info]</a>
+- 5-state token ring whose behavior is specified with shadow variables.</li>
+<li> TokenRingSixState <a href="TokenPassing.html#sec:TokenRingSixState">[info]</a>
+- 6-state token ring specified with variable superposition.</li>
+<li> TokenRingThreeBit <a href="TokenPassing.html#sec:TokenRingThreeBit">[info]</a>
+- 3-bit token ring from <a href="http://dx.doi.org/10.1006/jpdc.1996.0066">Gouda and Haddix</a>.</li>
+<li> TokenRingFourState (<a href="./../examplesynt/TokenRingFourState.prot">synt</a>)
+- 4-state token ring specified with variable superposition.
+This version is only stabilizing for <i>2</i> to <i>7</i> processes.
+It operates much like the 3-bit token ring.</li>
+<li> TokenRingDijkstra <a href="TokenPassing.html#sec:TokenRingDijkstra">[info]</a>
+- Dijkstra's stabilizing token ring.</li>
+<li> TokenChainThreeState <a href="TokenPassing.html#sec:TokenChainThreeState">[info]</a>
+- 3-state token passing on a chain topology.</li>
+<li> TokenChainDijkstra <a href="TokenPassing.html#sec:TokenChainDijkstra">[info]</a>
+- Dijkstra's 4-state token passing on a chain topology.</li>
+<li> TokenRingThreeState <a href="TokenPassing.html#sec:TokenRingThreeState">[info]</a>
+- 3-state token passing on a bidirectional ring.
+One solution is from Dijkstra, the other is from <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.153.6017">Chernoy, Shalom, and Zaks</a>.</li>
+<li> TokenRingOdd (<a href="./../examplespec/TokenRingOdd.prot">spec</a>, <a href="./../examplesoln/TokenRingOdd.prot">soln</a>)
+- Randomized token passing protocol on odd-sized rings.</li>
+</ul>
+<h3 id="sec:7">7. Other</h3><ul><li> ByzantineGenerals (<a href="./../examplespec/ByzantineGenerals.prot">spec</a>, <a href="./../examplesoln/ByzantineGenerals.prot">soln</a>)
+- The Byzantine generals problem formulated as an instance of self-stabilization.</li>
+<li> DiningCrypto (<a href="./../examplespec/DiningCrypto.prot">spec</a>, <a href="./../examplesoln/DiningCrypto.prot">soln</a>)
+- The dining cryptographers problem as an instance of self-stabilization, where the initial state is assumed to randomize the coins.
+We can't model anonymity, only determination of whether a cryptographer or the NSA pays for dinner.</li>
+<li> DiningPhilo (<a href="./../examplespec/DiningPhilo.prot">spec</a>, <a href="./../examplesoln/DiningPhilo.prot">soln</a>)
+- The dining philosophers problem. This version assumes a coloring in order to break symmetry.</li>
+<li> DiningPhiloRand (<a href="./../examplespec/DiningPhiloRand.prot">spec</a>, <a href="./../examplesoln/DiningPhiloRand.prot">soln</a>)
+- The dining philosophers problem. This version uses randomization to break symmetry.</li>
+<li> LeaderRingHuang (<a href="./../examplespec/LeaderRingHuang.prot">spec</a>, <a href="./../examplesoln/LeaderRingHuang.prot">soln</a>)
+- Leader election protocol on prime-sized rings from <a href="http://dx.doi.org/10.1145/169683.174161">Huang</a>.</li>
+<li> Sat (<a href="./../examplespec/Sat.prot">spec</a>)
+- Example reduction from 3-SAT to adding stabilization from our <a href="http://dx.doi.org/10.1007/978-3-642-40213-5_2">paper showing NP-completeness</a> of adding convergence.</li>
+<li> StopAndWait (<a href="./../examplespec/StopAndWait.prot">spec</a>, <a href="./../examplesoln/StopAndWait.prot">soln</a>)
+- The Stop-and-Wait protocol, otherwise known as the Alternating Bit protocol when the sequence number is binary.</li>
+</ul>
+</body>
+</html>

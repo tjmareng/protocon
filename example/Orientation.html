@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Orientation on Odd-Sized Rings</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Orientation on Odd-Sized Rings</h1>
+</div><h3>Contents</h3>
+<ol class="cram">
+<li><a href="#sec:OrientRing">Ring Orientation</a></li>
+<li><a href="#sec:OrientRingOdd">Odd-Sized Ring Orientation</a>
+<ol>
+<li><a href="#sec:2.1">Problem Instance</a></li>
+<li><a href="#sec:2.2">Stabilizing Version</a></li></ol></li>
+<li><a href="#sec:OrientDaisy">Daisy Chain Orientation</a></li></ol>
+<h3 id="sec:OrientRing">1. Ring Orientation</h3>
+<p><b>OrientRing.</b>
+(<a href="./../examplespec/OrientRing.prot">spec</a>,
+<a href="./../examplesett/OrientRing.args">args</a>,
+<a href="./../examplesoln/OrientRing.prot">soln</a>)</p>
+<h3 id="sec:OrientRingOdd">2. Odd-Sized Ring Orientation</h3>
+<p><b>OrientRingOdd.</b>
+(<a href="./../examplespec/OrientRingOdd.prot">spec</a>,
+<a href="./../examplesett/OrientRingOdd.args">args</a>,
+<a href="./../examplesoln/OrientRingOdd.prot">soln</a>)</p>
+<p>The <i>examplespec/OddOrientRing.prot</i> file specifies a bidirectional ring topology where processes wish to agree with each other on a direction around the ring.
+The topology is taken from the paper by Hoepman titled  <i>Uniform Deterministic Self-Stabilizing Ring-Orientation on Odd-Length Rings</i>.</p>
+<h4 id="sec:2.1">2.1. Problem Instance</h4>
+<pre><code>
+// Ring orientation using the state-reading model.
+// See examplesoln/OrientRingOdd.prot for the stabilizing version.
+
+constant N := 3;
+
+puppet variable color[Nat % N] &lt;- Nat % 2;
+puppet variable phase[Nat % N] &lt;- Nat % 2;
+direct variable way[Nat % (2*N)] &lt;- Nat % 2;
+
+// Eventually, all processes are pointing in the same direction.
+((future &amp; shadow) % puppet)
+  (forall i &lt;- Nat % N :
+   way[2*i] == way[2*(i+1)]
+  );
+
+process P[i &lt;- Nat % N]
+{
+  symmetric (hand_idx, j)  &lt;- {# (2*i, i-1), (2*i+1, i+1) #}
+  {
+    write: way[hand_idx];
+    read: color[j], phase[j];
+  }
+  write: color[i], phase[i];
+
+  // Assume that some direction is chosen at all times.
+  (assume &amp; closed)
+    (way[2*i] != way[2*i+1]);
+}
+
+</code></pre>
+<p>Each process  <span class="ttvbl">P[i]</span> reads  <span class="ttvbl">color[i-1]</span>,  <span class="ttvbl">color[i+1]</span>,  <span class="ttvbl">phase[i-1]</span>, and  <span class="ttvbl">phase[i+1]</span> and writes  <span class="ttvbl">color[i]</span>,  <span class="ttvbl">phase[i]</span>,  <span class="ttvbl">way[2*i]</span>, and  <span class="ttvbl">way[2*i+1]</span>.</p>
+<p>Eventually we want all the  <span class="ttvbl">way[2*i]</span> values to equal each other and differ from the  <span class="ttvbl">way[2*i+1]</span> values.
+That is, we want each process to agree on a direction.</p>
+<p>The  <span class="ttvbl">color</span> and  <span class="ttvbl">phase</span> variables are labeled as <code>puppet</code> because we allow the protocol to use them to achieve convergence.</p>
+<p>The invariant is labeled as <code>((future &amp; shadow) % puppet)</code> since we only require closure within a new invariant <i>I'</i> rather than <i>I</i>.
+Also, the behavior of the protocol within the new invariant <i>I'</i> must be the same as the underlying (i.e., shadow) protocol within <i>I</i>.</p>
+<h4 id="sec:2.2">2.2. Stabilizing Version</h4>
+<pre><code>
+// Ring orientation protocol using the state-reading model defined in
+// Title: Uniform Deterministic Self-Stabilizing Ring-Orientation on Odd-Length Rings
+// Author: Jaap-Henk Hoepman
+// Year: 1994
+
+constant N := 3;
+
+puppet variable color[Nat % N] &lt;- Nat % 2;
+puppet variable phase[Nat % N] &lt;- Nat % 2;
+direct variable way[Nat % (2*N)] &lt;- Nat % 2;
+
+// Eventually, all processes are pointing in the same direction.
+((future &amp; shadow) % puppet)
+  (forall i &lt;- Nat % N :
+   way[2*i] == way[2*(i+1)]
+  );
+
+process P[i &lt;- Nat % N]
+{
+  symmetric (hand_idx, j)  &lt;- {# (2*i, i-1), (2*i+1, i+1) #}
+  {
+    write: way[hand_idx];
+    read: color[j], phase[j];
+  }
+  write: color[i], phase[i];
+
+  // Assume that some direction is chosen at all times.
+  (assume &amp; closed)
+    (way[2*i] != way[2*i+1]);
+
+  // Actions a,b,c,d from the paper
+  puppet action:
+    ( color[i-1]==color[i+1] &amp;&amp; (color[i]==color[i-1] || phase[i]==1)
+     --&gt;
+      color[i]:=1-color[i-1];
+      phase[i]:=0;
+    );
+
+  // Actions e,f from the paper
+  puppet action:
+    (    color[i-1]==color[i] &amp;&amp; color[i]!=color[i+1] &amp;&amp; phase[i-1]==1 &amp;&amp; phase[i]==0 &amp;&amp; phase[i+1]==0
+      || color[i+1]==color[i] &amp;&amp; color[i]!=color[i-1] &amp;&amp; phase[i+1]==1 &amp;&amp; phase[i]==0 &amp;&amp; phase[i-1]==0
+     --&gt;
+      color[i] := 1-color[i];
+      phase[i] := 1;
+      way[2*i] := phase[i-1];
+      way[2*i+1] := phase[i+1];
+    );
+
+  // Actions g,h,i,j from the paper
+  puppet action:
+    (    color[i-1]==color[i] &amp;&amp; phase[i-1]==phase[i] &amp;&amp; color[i]!=color[i+1]
+      || color[i+1]==color[i] &amp;&amp; phase[i+1]==phase[i] &amp;&amp; color[i]!=color[i-1]
+     --&gt;
+      phase[i] := 1-phase[i];
+    );
+}
+
+</code></pre>
+<h3 id="sec:OrientDaisy">3. Daisy Chain Orientation</h3>
+<p><b>OrientDaisy.</b>
+(<a href="./../examplespec/OrientDaisy.prot">spec</a>,
+<a href="./../examplesett/OrientDaisy.args">args</a>,
+<a href="./../examplesynt/OrientDaisy.prot">synt</a>,
+<a href="./../examplesoln/OrientDaisy.prot">soln</a>)</p>
+</body>
+</html>

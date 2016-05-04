@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Protocon: Add Convergence to Shared Memory Protocols</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Protocon: Add Convergence to Shared Memory Protocols</h1>
+</div>
+<h3 id="sec:1">1. Resources</h3><ul><li>   <span class="texttt">--&gt;</span> <a href="tut.html">Tutorial</a>  <span class="texttt">&lt;--</span></li>
+<li> <a href="example/index.html">List of Examples</a></li>
+<li> <a href="benchmark.html">Table of Benchmarks</a></li>
+<li> <a href="legit.html">Different ways to specify legitimate states and behavior</a></li>
+<li> <a href="permit.html">Action constraints and syntax</a></li>
+<li> <a href="man.html">Manual Page</a></li>
+</ul>
+<h3 id="sec:2">2. Acknowledgments</h3>
+<p> <span class="underline">Resources</span></p><ul class="cram"><li>  <b>Superior</b>, a high performance computing cluster at Michigan Technological University, was used in obtaining results.</li>
+<li> This work is sponsored by the NSF grant CCF-1116546.</li>
+</ul>
+<table>
+<tr>
+<td class="cjust"><img src="http://www.nsf.gov/images/logos/nsf1.gif" /></td>
+<td>
+Any opinions, findings, and conclusions or recommendtions expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.</td>
+</tr>
+</table>
+<p> <span class="underline">Software</span></p><ul class="cram"><li> <a href="http://code.google.com/p/eqntott/downloads/detail?name=espresso-ab-1.0.tar.gz">espresso-ab</a> is optionally used for logic minimization (spawned process).</li>
+<li> <a href="http://vlsi.colorado.edu/~vis/Readme/README.glu">GLU 2.4</a> provides BDD/MDD manipulation (statically linked).</li>
+<li> <a href="http://piumarta.com/software/peg/">peg/leg</a> generates an input file parser (preprocessing step).</li>
+<li> <a href="http://qt-project.org/">Qt 4.6</a> is used by the GUI (dynamically linked).</li>
+</ul>
+<h3 id="sec:3">3. Release Notes</h3>
+<p> <b>2015.10.20</b></p><ul class="cram"><li> Benchmarks and updates to documentation</li>
+</ul>
+<p> <b>2015.09.29</b></p><ul class="cram"><li> Add dining cryptographers, dining philosophers, and stop-and-wait examples</li>
+<li> Allow actions that are not self-disabling when a self-disabling version violates safety</li>
+<li> Make synthesis feasible for synchronous systems</li>
+<li> Fix crash when optimizing using MPI</li>
+<li> Fix <code>-=&gt;</code> operator when used with random write variables, and change it to automatically randomize unassigned ones</li>
+<li> Fix <code>-=&gt;</code> operator to not affect the guard for pure shadow variables</li>
+<li> New <code>random read:</code> access to variables for probabilistic stabilization</li>
+<li> New <code>(future &amp; closed)</code> keyword for stabilization without enforcing a specific protocol behavior</li>
+</ul>
+<p> <b>2015.04.23</b></p><ul class="cram"><li> New <code>random write:</code> access to variables for probabilistic stabilization</li>
+<li> New <code>(future &amp; future silent)</code> and <code>(future &amp; future shadow)</code> keywords for convergence to any subset of the invariant</li>
+<li> Daisy chain orientation example</li>
+<li> Can implicitly remove self-loops by using <code>-=&gt;</code> in place of <code>--&gt;</code></li>
+<li> New <code>min(a,b)</code> and <code>max(a,b)</code> functions</li>
+</ul>
+<p> <b>2015.01.16</b></p><ul class="cram"><li> Introduce <code>active shadow</code> which can be substituted for <code>shadow</code> to prevent shadow self-loops</li>
+<li> Change <code>permit:</code> semantics to make more intuitive sense</li>
+<li> More examples and documentation</li>
+</ul>
+<p> <b>2014.12.21</b></p><ul class="cram"><li> New support for <code>shadow</code> variables</li>
+<li> Use .prot file extension</li>
+<li> MPI version now supports protocol optimization via the <b>-optimize</b> flag</li>
+<li> When using puppet variables, enforce a silent protocol with <code>future silent;</code> line</li>
+</ul>
+<p> <b>2014.09.12</b></p><ul class="cram"><li> New <code>permit:</code> keyword to complement <code>forbid:</code></li>
+<li> New <code>(assume &amp; closed)</code> keyword to restrict initial states</li>
+<li> New <b>-optimize</b> flag for finding an optimal protocol (in interleaved steps)</li>
+<li> New <code>(future &amp; silent)</code> or <code>(future &amp; shadow)</code> syntax for invariants (see examples)</li>
+<li> Putting a <b>-def</b> before (but not after) <b>-x</b> in the argument list affects the initial file read and candidate actions</li>
+<li> More examples!</li>
+<li> Substantially more quality control and testing, associated bug fixes</li>
+</ul>
+<p> <b>2014.05.24</b></p><ul class="cram"><li> File reorganization</li>
+<li> Preserve locally-conjunctive invariants</li>
+</ul>
+<p> <b>2014.04.26</b></p><ul class="cram"><li> Serial search is now the default mode</li>
+<li> Improved packaging</li>
+<li> Improved file reading, still much room to improve</li>
+<li> Verification in GUI</li>
+</ul>
+<p> <b>2014.01.31</b></p><ul class="cram"><li> Symmetry can be enforced across sets of variables.</li>
+<li> GUI gets a state exploration mode.</li>
+<li> Can now mark actions as forbidden. Synthesis cannot use them for recovery.</li>
+<li> Improve Promela model output.</li>
+<li> More testing and bug fixes.</li>
+</ul>
+<p> <b>2013.11.19</b></p><ul class="cram"><li> Fix output format when multiple variables are used.</li>
+<li> Add ring orientation example</li>
+</ul>
+</body>
+</html>

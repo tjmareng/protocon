@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Legitimate States and Behavior</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Legitimate States and Behavior</h1>
+</div><h3>Contents</h3>
+<ol class="cram">
+<li><a href="#sec:1">Defining the Invariant</a></li>
+<li><a href="#sec:2">Convergence and Behavior</a></li>
+<li><a href="#sec:3">Eventual Closure</a></li>
+<li><a href="#sec:4">Modding out Puppet Variables</a></li>
+<li><a href="#sec:5">Eventual Behavior</a></li></ol>
+<h3 id="sec:1">1. Defining the Invariant</h3>
+<p>Let's define a predicate for the system where all colors in the ring are distinct.</p>
+<pre class="cram"><code>predicate I := (forall i &lt;- Nat % N : c[i-1]!=c[i]);</code></pre>
+<p>Since we will use <i>I</i> as an invariant, it must be defined with shadow or direct variables (not puppet variables).</p>
+<h3 id="sec:2">2. Convergence and Behavior</h3>
+<p>Stabilization can be defined as both convergence and closure.
+That is, a system should eventually reach <i>I</i> and remain within <i>I</i>.
+This is generally too relaxed to be useful, but it is supported by writing the following in a <i>.prot</i> file:</p>
+<pre class="cram"><code>(future &amp; closed) (I);</code></pre>
+<p>We often want to specify how the protocol behaves within the invariant.
+The simplest case is that of silent protocols.
+Here we say the protocol should reach the invariant <i>I</i> and no actions should execute within <i>I</i>.
+This is written as:</p>
+<pre class="cram"><code>(future &amp; silent) (I);</code></pre>
+<p>When there is shadow protocol defined (using <code>shadow action:</code> statements in process definitions), we can enforce that it is executed within <i>I</i>.
+Puppet variables are allowed to be changed in any way, but shadow (and direct) variables must eventually change.
+That is, some transitions in the protocol may not change any shadow variables, which will appear as a self-loop in the shadow protocol.</p>
+<pre class="cram"><code>(future &amp; shadow) (I);</code></pre>
+<p class="cram">If no shadow protocol is defined, this statement allows any finite or infinite executions within the invariant provided that the shadow variables are not changed.</p>
+<p>Allowing shadow self-loops within <i>I</i> is undesirable since they delay operation of the shadow protocol.
+These can be forbidden by forcing all transitions in <i>I</i> to correspond with transitions in the shadow protocol.
+Write this as:</p>
+<pre class="cram"><code>(future &amp; active shadow) (I);</code></pre>
+<p class="cram">Note that the shadow protocol must not have deadlocks.</p>
+<h3 id="sec:3">3. Eventual Closure</h3>
+<p>Sometimes it is okay to find a protocol that stabilizes to some invariant <i>I'</i> which is a subset of the original invariant <i>I</i>.
+This is the method of adaptive programs as described in <a href="http://dx.doi.org/10.1109/32.92911">Adaptive Programming</a> by Gouda and Herman.
+The three invariant styles above can be stated with this notion of eventual closure:</p>
+<pre class="cram"><code>(future &amp; future silent) (I);
+(future &amp; future shadow) (I);
+(future &amp; future active shadow) (I);</code></pre>
+<p> <b>Note:</b> Always use this notation or the next section's notation when using pure <code>shadow</code> variables (not <code>direct</code> variables).
+Shadow variables are assigned completely based on puppet (and direct) variables, so any nontrivial protocol will have transitions that leave <i>I</i>.
+Therefore <i>I'</i> will need to be a proper subset of <i>I</i>.</p>
+<h3 id="sec:4">4. Modding out Puppet Variables</h3>
+<p>Sometimes we want to enforce that each state in <i>I</i> is kept within <i>I'</i> for at least some values of puppet variables.
+That is, for every valuation of shadow (or direct) variables that satisfies <i>I</i>, a state exists in <i>I'</i> with the same valuation (but some arbitrary valuation of puppet variables).
+In other words, we want <i>I</i> to equal <i>I'</i>, ignoring differences caused by puppet variables.</p>
+<p>Semantics follow directly from the previous section.
+To synthesize a protocol which is silent in some <i>I'</i>, we would write <code>(future &amp; silent) (I_prime);</code> if we knew <i>I'</i>.
+It can be difficult to determine <i>I'</i> manually, so we prefer to specify <i>I</i> and use a certain notation to say that <i>I=I'</i>  <i>modulo</i> the puppet variables.
+This is written as:</p>
+<pre class="cram"><code>((future &amp; silent) % puppet) (I);</code></pre>
+<p>Likewise, if we want to enforce execution of the shadow protocol within <i>I'</i> (i.e., <code>(future &amp; shadow) (I_prime);</code>), we write:</p>
+<pre class="cram"><code>((future &amp; shadow) % puppet) (I);</code></pre>
+<p class="cram">This is the general constraint we used in <a href="http://dx.doi.org/10.1007/978-3-319-11764-5_18">Synthesizing Self-stabilization through Superposition and Backtracking</a>.</p>
+<p>Finally, if we want to force all actions within <i>I'</i> to correspond with actions in the shadow protocol (i.e., <code>(future &amp; active shadow) (I_prime);</code>), we write:</p>
+<pre class="cram"><code>((future &amp; active shadow) % puppet) (I);</code></pre>
+<h3 id="sec:5">5. Eventual Behavior</h3>
+<p>In some cases, forcing silence or an active shadow protocol within the entire invariant <i>I'</i> is too strict.
+Rather, we are often content to enforce these constraints on the protocol's eventual behavior.
+This is done by an additional statement in the specification <i>.prot</i> file.
+That is, the statements in this section are optional and are given in addition to lines such as <code>(future &amp; shadow) (I);</code> or <code>((future &amp; shadow) % puppet) (I);</code>.</p>
+<p>When the shadow protocol is silent, we often want to enforce a silent protocol overall in order to minimize network traffic.
+This is expressed by adding the following line:</p>
+<pre class="cram"><code>future silent;</code></pre>
+<p class="cram">We use this in <a href='./examplespec/OrientRing.prot'>./examplespec/OrientRing.prot</a> example where the invariant is defined as <code>(future &amp; shadow) (I);</code>.
+In this case, we desire a silent protocol, but the two alternative ways to define the invariant have deficiencies:
+(1) <code>(future &amp; silent) (I);</code> is too strict, and
+(2) <code>((future &amp; silent) % puppet) (I);</code> does not force <i>I'=I</i>, which disables some search optimizations.</p>
+<p>When the shadow protocol is live, we often want the synthesized protocol to execute its actions exactly (i.e., eventually, every transition of the system corresponds to a shadow action).
+This desire is for practicality - we want the service to respond quickly if no faults are occurring.
+Write this as:</p>
+<pre class="cram"><code>future active shadow;</code></pre>
+<p class="cram">We could use this in <a href='./examplespec/TokenRingSuperpos.prot'>./examplespec/TokenRingSuperpos.prot</a> where the invariant is defined as <code>(future &amp; shadow) (I);</code>.
+Though it is not used in the example itself, we could add <code>future active shadow;</code> if we want every transition within the invariant to pass a token.
+We would do this over simply defining the invariant do be active, since the alternative ways to define the invariant have deficiencies:
+(1) <code>(future &amp; active shadow) (I);</code> is too strict, and
+(2) <code>((future &amp; active shadow) % puppet) (I);</code> does not force <i>I'=I</i>, which disables some search optimizations.</p>
+</body>
+</html>

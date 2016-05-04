@@ -1,0 +1,559 @@
+Content-type: text/html
+
+<HTML><HEAD><TITLE>Manpage of PROTOCON</TITLE>
+</HEAD><BODY>
+<H1>PROTOCON</H1>
+Section: User Commands  (1)<BR>Updated: April 2015<BR><A HREF="#index">Index</A>
+<A HREF="http://localhost/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+protocon - add convergence to shared memory protocols
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<B>protocon</B>
+
+<I>RUN_MODE</I>?
+
+<B>-x&nbsp;</B><I>specification-file.prot</I>
+
+(<B>-o</B>
+
+<I>solution-file.prot</I>)?
+
+<I>OPTIONS</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<I>Protocon</I>
+
+adds convergence to shared memory protocols.
+<A NAME="lbAE">&nbsp;</A>
+<H2>RUN_MODE</H2>
+
+<DL COMPACT>
+<DT><B>-search</B>
+
+<DD>
+Randomized backtracking with restarts.
+This is the default.
+<DT><B>-verify</B>
+
+<DD>
+Verify a given protocol.
+<DT><B>-nop</B>
+
+<DD>
+Do not perform any verification or synthesis.
+This is useful when paired with
+<B>-o</B>
+
+or any of the other output options.
+<DT><B>-rank-shuffle</B>
+
+<DD>
+This is a
+<B>-search</B>
+
+that uses incomplete heuristics rather than backtracking.
+This is a swarm synthesis algorithm that ranks actions and permutes the actions within each rank.
+<DT><B>-minimize-conflicts</B>
+
+<DD>
+Attempt to minimize the conflicts recorded from a previous run.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-h</B>
+
+<DD>
+Print a summary of available options and exit.
+(Doesn't actually do this :D)
+<DT><B>-x-args&nbsp;</B><I>args-file</I>
+
+<DD>
+Load a file containing command-line arguments.
+<DT><B>-parallel&nbsp;</B><I>N</I><B></B>?<I></I>
+
+<DD>
+Use
+<I>N</I>
+
+threads for the task.
+If
+<I>N</I>
+
+is not given, then it is automatically detected by OpenMP or the value of the
+<B>$OMP_NUM_THREADS</B>
+
+environment variable.
+Note that this option is ignored when using
+<B>protocon-mpi</B>
+
+since the number of parallel processes is determined by the MPI runtime.
+<DT><B>-def&nbsp;</B><I>key&nbsp;val</I>
+
+<DD>
+Override or define a constant
+<I>key</I>
+
+in the input file to have the value
+<I>val</I>.
+
+<DT><B>-param&nbsp;</B><I>key&nbsp;val</I>
+
+<DD>
+A solution protocol must satisfy the input system with the constant
+<I>key</I>
+
+defined as
+<I>val</I>.
+
+This is different from
+<B>-def</B>
+
+since it forces the search to consider an additional system.
+If this parameter changes the size of variables, bad things will happen.
+For performance, is assumed that the
+<B>-param</B>
+
+flags specify systems in order of increasing computational cost.
+<DT><B>-param&nbsp;[&nbsp;-def&nbsp;</B><I>key&nbsp;val&nbsp;</I><B></B>...<B>&nbsp;]</B>
+
+<DD>
+This alternative form of
+<B>-param</B>
+
+allows some extra options to be specified between brackets (note: parentheses are allowed too).
+Except for
+<B>-no-partial</B>,
+
+these options are all valid outside of a
+<B>-param</B>
+
+block as well.
+<DT><DD>
+<B>-def&nbsp;</B><I>key&nbsp;val</I>
+
+Multiple constants can be defined.
+<DT><DD>
+<B>-no-conflict</B>
+
+Do not consider this parameterized system when minimizing and recording conflicts.
+When used outside of and before all
+<B>-param</B>
+
+blocks, this can affect the completeness of the search.
+<DT><DD>
+<B>-no-partial</B>
+
+Do not build a partial solution for this parameterized system.
+This system will only be considered when a solution is found which satisfies all other systems, at which point the protocol will be verified to work or fail for this system.
+In the case of a failed verification, the search will restart.
+This flag also implies
+<B>-no-conflict</B>.
+
+<DT><DD>
+<B>-synchronous</B>
+
+Consider this system to be synchronous.
+<DT><B>-sysrand</B>
+
+<DD>
+Use a system random number generator which takes includes system entropy.
+Executions using this option are not reproducible.
+<DT><B>-no-random</B>
+
+<DD>
+Do not use randomization in backtracking, simply make decisions in order.
+This does not make sense in conjunction with the
+<B>-parallel</B>
+
+flag.
+<DT><B>-pick&nbsp;</B>(<B>mrv</B>|<B>lcv</B>|<B>fully-random</B>|<B>conflict</B>|<B>quick</B>)
+
+<DD>
+<DT><DD>
+<B>mrv</B>
+
+minimum remaining values heuristic.
+This is used by default, and it is always used since (most) other picking heuristics build on its functionality.
+<DT><DD>
+<B>lcv</B>
+
+Least constraining value heuristic.
+Attempt to choose actions which constrain the possibilities the least.
+<DT><DD>
+<B>fully-random</B>
+
+Randomly choose a candidate action without the MRV heuristic.
+The
+<B>mrv</B>
+
+method already uses randomization in a backtracking search when the run mode is
+<B>-random</B>
+
+(this is the default) rather than
+<B>-serial</B>.
+
+<DT><DD>
+<B>conflict</B>
+
+Try to choose actions which correspond with existing conflicts.
+This is constrained by the MRV heuristic.
+<DT><DD>
+<B>quick</B>
+
+For testing, don't use this.
+The
+<B>mrv</B>
+
+picking method is fast.
+<DT><B>-pick-reach</B>
+
+<DD>
+Without breaking the minimum remaining valuesheuristic, try to pick actions which resolve a deadlock which can reach the invariant using the partial solution.
+<DT><B>-o-log&nbsp;</B><I>log-file</I>
+
+<DD>
+Output log file
+<I>log-file.tid</I>,
+
+where
+<I>tid</I>
+
+is the thread id.
+<DT><B>-x-conflicts&nbsp;</B><I>conflicts-file</I>
+
+<DD>
+Load conflicts from a previous run.
+<DT><B>-o-conflicts&nbsp;</B><I>conflicts-file</I>
+
+<DD>
+Store the conflicts found by this search.
+<DT><B>-snapshot-conflicts</B>
+
+<DD>
+After every iteration, write the current conflicts to a file
+<I>conflicts-file.tid</I>,
+
+where
+<I>tid</I>
+
+is the thread id.
+<DT><B>-max-conflict&nbsp;</B><I>N</I>
+
+<DD>
+For recorded conflicts, limit the number of actions involved to
+<I>N</I>.
+
+There is no limit by default.
+<DT><B>-ntrials&nbsp;</B><I>N</I>
+
+<DD>
+Limit the number of trials per thread to
+<I>N</I>.
+
+<DT><B>-optimize</B>
+
+<DD>
+Optimize the result by minimizing the number of asynchronous layers required to reach a fixpoint.
+The minimization applies to the sum of such layers of all systems being considered.
+<DT><B>-x-try&nbsp;</B><I>possible-solution.prot</I>
+
+<DD>
+Try a solution before others.
+Multiple solutions may be specified by multiple flags.
+This flag is useful with
+<B>-optimize</B>
+
+to start optimization at a fairly good solution.
+<DT><B>-try-all</B>
+
+<DD>
+Keep searching, even if a solution is found.
+This is helpful for accumulating conflicts.
+<DT><B>-max-depth&nbsp;</B><I>N</I>
+
+<DD>
+Limit search depth to
+<I>N</I>
+
+levels before restarting.
+This is useful if you are searching for small conflicts.
+Consider using the
+<B>-pick fully-random</B>
+
+option with this.
+<DT><B>-max-height&nbsp;</B><I>N</I>
+
+<DD>
+Limit backtracking to
+<I>N</I>
+
+levels before restarting.
+Default is
+<I>3</I>.
+
+A value of
+<I>0</I>
+
+disables restarts.
+<DT><B>-x-test-known&nbsp;</B><I>known-solution.prot</I>
+
+<DD>
+After each iteration, test to make sure a known solution can still be found.
+This is useful with the
+<B>-try-all</B>
+
+flag to test (to some degree) that the search method is complete.
+<DT><B>-o-promela&nbsp;</B><I>model-file.pml</I>
+
+<DD>
+
+<DT>
+<DD>
+<B>-o-pml&nbsp;</B><I>model-file.pml</I>
+
+Write a Promela model.
+This functionality is incomplete, in that the invariant is not included in the model.
+<DT><B>-o-graphviz&nbsp;</B><I>dot-file.gv</I>
+
+<DD>
+Write the system topology to a GraphViz DOT file to show which processes access the same variables.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES</H2>
+
+The
+<B>examplesoln/</B>
+
+directory contains known solutions to some protocols.
+<P>
+It is instructional to verify these.
+For example, this is how you would verify that the token ring of three bits from Gouda and Haddix is self-stabilizing for a ring of size
+<I>5</I>:
+
+<PRE>
+    protocon -verify -x examplesoln/TokenRingThreeBit.prot -def N 5
+</PRE>
+
+Similarly, you can verify a similar token ring generated by this tool:
+<PRE>
+    protocon -verify -x examplesoln/TokenRingSixState.prot -def N 5
+</PRE>
+
+<P>
+Note that if the executable
+<B>protocon</B>
+
+is not in your
+<B>$PATH</B>,
+
+then you must specify the full pathname to it, such as
+<B>./bin/protocon</B>
+
+in order to run these commands.
+<P>
+In the
+<B>examplespec/</B>
+
+directory, there are some nice example problem instances.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLE: Coloring</H2>
+
+To find a 3-coloring protocol on a ring of size
+<I>5</I>,
+
+run:
+<PRE>
+    protocon -serial -x examplespec/ColorRing.prot -o found.prot -def N 5
+</PRE>
+
+<P>
+The
+<B>-serial</B>
+
+<B>-no-random</B>
+
+flag is merely there to force a serial execution without randomization.
+If there are more cores available, run:
+<PRE>
+    protocon -x examplespec/ColorRing.prot -o found.prot -def N 5 -o-log search.log
+</PRE>
+
+We use the
+<B>-o-log</B>
+
+flag to create log files for each search thread.
+If these are not desired, simply do not give the flag.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLE: Agreement / Leader Election</H2>
+
+One particular instance of agreement on a ring poses some issues.
+Using the default heuristics, the following may take a long time!
+<PRE>
+    protocon -x inst/LeaderRingHuang.prot -def N 5
+</PRE>
+
+<P>
+But notice that removing randomization solves this problem very quickly without any special flags.
+<PRE>
+    protocon -serial -no-random -x examplespec/LeaderRingHuang.prot -def N 5
+</PRE>
+
+This even works well when the ring, and each variable domain, is of size
+<I>6</I>.
+
+<PRE>
+    protocon -serial -no-random -x examplespec/LeaderRingHuang.prot -def N 6
+</PRE>
+
+<P>
+The random method can make better decisions (for this problem, at least) by trying to choose actions which make an execution from some deadlock state to the invariant, rather than just resolving some deadlock.
+This is accomplished with the
+<B>-pick-reach</B>
+
+flag.
+We can also make better decisions by using the least-constraining value heuristic on top of the default minimum remaining values heuristic.
+This is accomplished with the
+<B>-pick lcv</B>
+
+flag.
+Alone, each of these two flags make the runtime finish in a reasonable amount of time (55 seconds on a 2 GHz machine).
+Together, they rival the non-random version.
+<PRE>
+    protocon -x examplespec/LeaderRingHuang.prot -pick-reach -def N 5
+    protocon -x examplespec/LeaderRingHuang.prot -pick lcv -def N 5
+    protocon -x examplespec/LeaderRingHuang.prot -pick-reach -pick lcv -def N 5
+</PRE>
+
+<P>
+Since
+<B>-pick-reach</B>
+
+helped, we might try the
+<B>-rank-shuffle</B>
+
+search which does not use backtracking at all, but takes reachability into account as a fundamental concept.
+Use the
+<B>-no-conflict</B>
+
+flag to speed up the trials.
+<PRE>
+    protocon -rank-shuffle -x examplespec/LeaderRingHuang.prot -no-conflict -def N 5
+</PRE>
+
+We can similarly use
+<B>-no-conflict</B>
+
+with backtracking, which works fairly well in this case.
+<PRE>
+    protocon -x examplespec/LeaderRingHuang.prot -no-conflict -def N 5
+</PRE>
+
+Be warned that the
+<B>-no-conflict</B>
+
+flag makes a search incomplete and usually hurts a backtracking search.
+<P>
+For rings of size
+<I>6</I>,
+
+the randomized searches do not compete with the
+<B>-serial</B>
+
+<B>-no-random</B>
+
+search.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>EXAMPLE: Three Bit Token Ring</H2>
+
+Let's try to find a stabilizing token ring using three bits on a ring of size
+<I>5</I>.
+
+<PRE>
+    protocon -x examplespec/ThreeBitTokenRing.prot -o found.prot -def N 5
+</PRE>
+
+<P>
+Is the protocol stabilizing on a ring of size
+<I>3</I>?
+
+<PRE>
+    protocon -verify -x found.prot -def N 3
+</PRE>
+
+<P>
+How about of size
+<I>4</I>
+
+or
+<I>6</I>?
+
+<PRE>
+    protocon -verify -x found.prot -def N 4
+    protocon -verify -x found.prot -def N 6
+</PRE>
+
+<P>
+Probably not.
+Let's try again, taking those sizes into account!
+<PRE>
+    protocon -x examplespec/TokenRingThreeBit.prot -o found.prot -def N 5 -param N 3 -param N 4 -param N 6
+</PRE>
+
+<P>
+But what if we want to search up to size
+<I>7</I>,
+
+but it takes too long check a system of that size at each decision level?
+Use the
+<B>-no-partial</B>
+
+flag to just verify the protocol on that system after finding a protocol which is self-stabilizing for all smaller sizes.
+<PRE>
+    protocon -x examplespec/TokenRingThreeBit.prot -o found.prot -def N 5 -param N 3 -param N 4 -param N 6 -param [ -def N 7 -no-partial ]
+</PRE>
+
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>BUGS</H2>
+
+The MPI version currently does not support
+<B>-nop</B>
+
+and never will.
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">RUN_MODE</A><DD>
+<DT><A HREF="#lbAF">OPTIONS</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES</A><DD>
+<DT><A HREF="#lbAH">EXAMPLE: Coloring</A><DD>
+<DT><A HREF="#lbAI">EXAMPLE: Agreement / Leader Election</A><DD>
+<DT><A HREF="#lbAJ">EXAMPLE: Three Bit Token Ring</A><DD>
+<DT><A HREF="#lbAK">BUGS</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="http://localhost/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 09:52:53 GMT, April 21, 2016
+</BODY>
+</HTML>

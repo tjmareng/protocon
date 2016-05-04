@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+pre {
+  padding-left: 3em;
+  white-space: pre-wrap;
+  display: block;
+}
+pre.cram, ol.cram, ul.cram {
+  margin-top: -1em;
+}
+p.cram { margin-top: -0.5em; }
+span.underline { text-decoration: underline; }
+span.texttt, span.ttvbl {
+  font-family:"Courier New", Monospace;
+}
+pre, code {
+  background-color: #E2E2E2;
+}
+a.texturl:link, a.texturl:visited {
+  color: black;
+  text-decoration: none;
+}
+a.texturl:hover {
+  color: blue;
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+  padding: 0.3em;
+  text-align: left;
+}
+.ljust { text-align: left; }
+.cjust { text-align: center; }
+.rjust { text-align: right; }
+td.lline { border-left: thin solid black; }
+td.rline { border-right: thin solid black; }
+tr.hline { border-top: thin solid black; }
+</style>
+<title>Action Syntax</title>
+</head>
+<body>
+<div class="cjust">
+<h1>Action Syntax</h1>
+</div><h3>Contents</h3>
+<ol class="cram">
+<li><a href="#sec:1">Self-Loop Removal (<code>-=&gt;</code>)</a></li>
+<li><a href="#sec:2">Disallowing Actions (<code>permit</code> / <code>forbid</code>)</a></li>
+<li><a href="#sec:3">Randomizing Variables (<code>x[i]:=_;</code>)</a></li></ol>
+<h3 id="sec:1">1. Self-Loop Removal (<code>-=&gt;</code>)</h3>
+<p>The <code>-=&gt;</code> operator can be used in place of <code>--&gt;</code> to automatically remove transitions that would result in a self-loop.
+This often helps with readability.
+For example, the following two actions are equivalent:</p>
+<pre class="cram"><code>( x[i-1]==1 &amp;&amp; x[i+1]==1 -=&gt; x[i]:=2; )
+( x[i-1]==1 &amp;&amp; x[i]!=2 &amp;&amp; x[i+1]==1 --&gt; x[i]:=2; )</code></pre>
+<h3 id="sec:2">2. Disallowing Actions (<code>permit</code> / <code>forbid</code>)</h3>
+<p>The <code>permit</code> and <code>forbid</code> keywords are used to specify the forms of allowed and disallowed actions available to synthesis.
+If <code>permit</code> does not appear, then it is equivalent to permitting all actions.
+If <code>forbid</code> appears, then the specified form may not be used, even if it matches a <code>permit</code> statement.</p>
+<p><b>Dining philosophers.</b>
+Let us look at the <a href="./examplespec/DiningPhilo.prot">Dining Philosophers Problem</a> specification, which uses three <code>permit</code>/<code>forbid</code> statements.
+For this analysis, we only need to know that each philosopher <code>P[i]</code> can write three binary variables: <code>hungry[i]</code>, <code>chopstick[L]</code>, and <code>chopstick[R]</code> that denote whether the philosopher is hungry, has the chopstick to eir left, and has the chopstick to eir right.</p>
+<p>The predicate <code>HasChopsticks</code> evaluates to true <i>iff</i> the philosopher has both chopsticks.</p>
+<p>The first action constraint allows actions where <code>hungry[i]</code> remains constant.</p>
+<pre class="cram"><code>permit: ( 1==1 --&gt; hungry[i]; );</code></pre>
+<p class="cram">This uses the shorthand <code>hungry[i];</code> in place of <code>hungry[i]:=hungry[i];</code>.
+Since neither of the chopstick variables are mentioned in the assignment, they may be changed in any way (without violating a <code>forbid</code> constraint).
+This behavior differs from the syntax of normal actions, where unassigned variables are assumed to stay constant.</p>
+<p>The second action constraint allows actions that change <code>hungry[i]</code> to <i>0</i> while keeping both chopsticks.</p>
+<pre class="cram"><code>permit: ( HasChopsticks &amp;&amp; hungry[i]==1 --&gt; hungry[i]:=0; _; );</code></pre>
+<p class="cram">This uses the shorthand <code>_;</code> to keep the unlisted variables at the same values; i.e., <code>chopstick[L]:=chopstick[L]; chopstick[R]:=chopstick[R];</code>.</p>
+<p>The final action constraint disallows actions that change both chopstick variables at the same time.</p>
+<pre class="cram"><code>forbid: ( 1==1 --&gt; chopstick[L]:=1-chopstick[L]; chopstick[R]:=1-chopstick[R]; );</code></pre>
+<p class="cram">Note that since <code>hungry[i]</code> is not assigned, cases where the variable stays the same or is changed are both forbidden.
+However, since only the first <code>permit</code> statement allows chopsticks to change, we are only constraining actions where <code>hungry[i]</code> does not change.</p>
+<p><b>Self-disabling processes.</b>
+When using <code>permit</code> or <code>forbid</code>, synthesis may find a protocol where processes are not self-disabling.
+This is necessary for the dining philosophers because a philosopher must be able to perform multiple actions in sequence: pick up a chopstick, pick up the other, finish being hungry, set down a chopstick, and set down the other.
+However, you may wish to use <code>permit</code> and <code>forbid</code> to give hints to synthesis.
+In this case, use the <b>-disabling</b> flag to enforce self-disabling processes.</p>
+<h3 id="sec:3">3. Randomizing Variables (<code>x[i]:=_;</code>)</h3>
+<p>When a variable is marked with <code>random write</code>, it is assigned randomly by a process without violating safety constraints (e.g., closure).
+In the <a href="./examplesoln/ColorUniRing.prot">unidirectional ring coloring</a> protocol, the following action is used to randomly select a value for <code>x[i]</code> that differs from <code>x[i-1</code>.</p>
+<pre class="cram"><code>( x[i-1]==x[i] --&gt; x[i]:=_; )</code></pre>
+<p class="cram">Note that this process is self-disabling in the sense that it  <i>can</i> disable itself by picking certain random values.</p>
+</body>
+</html>
