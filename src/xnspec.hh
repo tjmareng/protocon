@@ -49,21 +49,25 @@ class NatMap {
 public:
   Table< int > membs;
   String expression;
+  bool scalar;
 
-  NatMap() {}
+  NatMap() : scalar(true) {}
 
-  explicit NatMap(uint nmembs) {
+  explicit NatMap(uint nmembs) : scalar(true) {
     for (uint i = 0; i < nmembs; ++i) {
       membs.push(i);
     }
   }
 
   const NatMap& operator=(int x) {
+    scalar = true;
     membs.resize(1);
     membs[0] = x;
     expression = x;
     return *this;
   }
+
+  uint sz() const { return membs.sz(); }
 
   int eval(uint i) const {
     Claim2( i ,<, membs.sz() );
@@ -196,6 +200,7 @@ public:
   Table<bool> random_write_flags;
   Table<LinkSymmetry> link_symmetries;
   String nmembs_expression;
+  String offset_expression;
   Table<String> shadow_act_strings;
   Table<String> forbid_act_strings;
   Table<String> permit_act_strings;
