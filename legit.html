@@ -47,18 +47,18 @@ tr.hline { border-top: thin solid black; }
 <body>
 <div class="cjust">
 <h1>Legitimate States and Behavior</h1>
-</div><h3>Contents</h3>
+</div><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:1">Defining the Invariant</a></li>
 <li><a href="#sec:2">Convergence and Behavior</a></li>
 <li><a href="#sec:3">Eventual Closure</a></li>
 <li><a href="#sec:4">Modding out Puppet Variables</a></li>
 <li><a href="#sec:5">Eventual Behavior</a></li></ol>
-<h3 id="sec:1">1. Defining the Invariant</h3>
+<h2 id="sec:1">1. Defining the Invariant</h2>
 <p>Let's define a predicate for the system where all colors in the ring are distinct.</p>
 <pre class="cram"><code>predicate I := (forall i &lt;- Nat % N : c[i-1]!=c[i]);</code></pre>
 <p>Since we will use <i>I</i> as an invariant, it must be defined with shadow or direct variables (not puppet variables).</p>
-<h3 id="sec:2">2. Convergence and Behavior</h3>
+<h2 id="sec:2">2. Convergence and Behavior</h2>
 <p>Stabilization can be defined as both convergence and closure.
 That is, a system should eventually reach <i>I</i> and remain within <i>I</i>.
 This is generally too relaxed to be useful, but it is supported by writing the following in a <i>.prot</i> file:</p>
@@ -78,7 +78,7 @@ These can be forbidden by forcing all transitions in <i>I</i> to correspond with
 Write this as:</p>
 <pre class="cram"><code>(future &amp; active shadow) (I);</code></pre>
 <p class="cram">Note that the shadow protocol must not have deadlocks.</p>
-<h3 id="sec:3">3. Eventual Closure</h3>
+<h2 id="sec:3">3. Eventual Closure</h2>
 <p>Sometimes it is okay to find a protocol that stabilizes to some invariant <i>I'</i> which is a subset of the original invariant <i>I</i>.
 This is the method of adaptive programs as described in <a href="http://dx.doi.org/10.1109/32.92911">Adaptive Programming</a> by Gouda and Herman.
 The three invariant styles above can be stated with this notion of eventual closure:</p>
@@ -88,7 +88,7 @@ The three invariant styles above can be stated with this notion of eventual clos
 <p> <b>Note:</b> Always use this notation or the next section's notation when using pure <code>shadow</code> variables (not <code>direct</code> variables).
 Shadow variables are assigned completely based on puppet (and direct) variables, so any nontrivial protocol will have transitions that leave <i>I</i>.
 Therefore <i>I'</i> will need to be a proper subset of <i>I</i>.</p>
-<h3 id="sec:4">4. Modding out Puppet Variables</h3>
+<h2 id="sec:4">4. Modding out Puppet Variables</h2>
 <p>Sometimes we want to enforce that each state in <i>I</i> is kept within <i>I'</i> for at least some values of puppet variables.
 That is, for every valuation of shadow (or direct) variables that satisfies <i>I</i>, a state exists in <i>I'</i> with the same valuation (but some arbitrary valuation of puppet variables).
 In other words, we want <i>I</i> to equal <i>I'</i>, ignoring differences caused by puppet variables.</p>
@@ -102,7 +102,7 @@ This is written as:</p>
 <p class="cram">This is the general constraint we used in <a href="http://dx.doi.org/10.1007/978-3-319-11764-5_18">Synthesizing Self-stabilization through Superposition and Backtracking</a>.</p>
 <p>Finally, if we want to force all actions within <i>I'</i> to correspond with actions in the shadow protocol (i.e., <code>(future &amp; active shadow) (I_prime);</code>), we write:</p>
 <pre class="cram"><code>((future &amp; active shadow) % puppet) (I);</code></pre>
-<h3 id="sec:5">5. Eventual Behavior</h3>
+<h2 id="sec:5">5. Eventual Behavior</h2>
 <p>In some cases, forcing silence or an active shadow protocol within the entire invariant <i>I'</i> is too strict.
 Rather, we are often content to enforce these constraints on the protocol's eventual behavior.
 This is done by an additional statement in the specification <i>.prot</i> file.

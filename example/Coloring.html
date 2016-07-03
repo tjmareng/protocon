@@ -47,7 +47,7 @@ tr.hline { border-top: thin solid black; }
 <body>
 <div class="cjust">
 <h1>Coloring</h1>
-</div><h3>Contents</h3>
+</div><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:ColorRing">3-Coloring on a Ring</a>
 <ol>
@@ -57,7 +57,7 @@ tr.hline { border-top: thin solid black; }
 <li><a href="#sec:1.4">Parallel Search</a></li></ol></li>
 <li><a href="#sec:ColorRingDistrib">Distributed 3-Coloring on a Ring</a></li>
 <li><a href="#sec:ColorRingLocal">Distance-2 5-Coloring on a Ring</a></li></ol>
-<h3 id="sec:ColorRing">1. 3-Coloring on a Ring</h3>
+<h2 id="sec:ColorRing">1. 3-Coloring on a Ring</h2>
 <p><b>ColorRing.</b>
 (<a href="./../examplespec/ColorRing.prot">spec</a>,
 <a href="./../examplesett/ColorRing.args">args</a>,
@@ -92,16 +92,16 @@ process P[i &lt;- Nat % N]
 <p>The commands in this tutorial should be executed from within the top-level project directory on a Linux system.
 First make a directory <i>tmp/</i> to store some files.</p>
 <pre class="cram"><code>mkdir tmp</code></pre>
-<h4 id="sec:1.1">1.1. Synthesis</h4>
+<h3 id="sec:1.1">1.1. Synthesis</h3>
 <p>Synthesize a 3-coloring protocol that works on rings of size <i>3</i>, <i>4</i>, and <i>5</i>.</p>
-<pre class="cram"><code>./bin/protocon -x examplespec/ColorRing.prot -def N 3 -param N 4 -param N 5 -o tmp/color.prot</code></pre>
-<h4 id="sec:1.2">1.2. Verification</h4>
+<pre class="cram"><code>./bin/protocon -x examplespec/ColorRing.prot -param N 3..5 -o tmp/color.prot</code></pre>
+<h3 id="sec:1.2">1.2. Verification</h3>
 <p>Check if the protocol is self-stabilizing rings of size <i>7</i>. It should be fine!</p>
-<pre class="cram"><code>./bin/protocon -verify -x tmp/color.prot -def N 7</code></pre>
-<h4 id="sec:1.3">1.3. Model Checking with Spin</h4>
+<pre class="cram"><code>./bin/protocon -verify -x tmp/color.prot -param N 7</code></pre>
+<h3 id="sec:1.3">1.3. Model Checking with Spin</h3>
 <p>We can also verify this protocol's correctness in the <a href="http://spinroot.com">Spin model checker</a> (here's a <a href="../../tut/spin.html">quick setup guide</a>).
 First output a model in the Promela language for a ring of <i>6</i> processes.</p>
-<pre class="cram"><code>./bin/protocon -nop -x tmp/color.prot -def N 6 -o-promela tmp/color.pml</code></pre>
+<pre class="cram"><code>./bin/protocon -nop -x tmp/color.prot -param N 6 -o-promela tmp/color.pml</code></pre>
 <p class="cram">Now open the model in iSpin.</p>
 <pre class="cram"><code>cd tmp
 ispin color.pml</code></pre>
@@ -122,21 +122,21 @@ Under <b>Liveness</b>, ensure that the <b>acceptance cycles</b> bubble is filled
 Next, under <b>Never Claims</b>, click <b>use claim</b> and type <b>Closure</b> for the <b>claim name</b>.
 Verify closure holds by clicking <b>Run</b>.
 Now verify that covergence holds. <i>Can you make a change to the 3-coloring protocol that breaks closure? How about convergence?</i></p>
-<h4 id="sec:1.4">1.4. Parallel Search</h4>
+<h3 id="sec:1.4">1.4. Parallel Search</h3>
 <p>When a problem instance is difficult, it may help to perform multiple searches at the same time using the <b>-parallel</b> flag.
 Since multiple searches are occurring simultaneously, the search progress output is hidden.
 This is remedied with the <b>-o-log</b> flag to create log files <i>search.log.</i><b>tid</b> for each thread of index <b>tid</b>.</p>
-<pre class="cram"><code>./bin/protocon -parallel -x examplespec/ColorRing.prot -def N 3 -param N 4 -param N 5 -o tmp/color.prot -o-log tmp/color.log</code></pre>
+<pre class="cram"><code>./bin/protocon -parallel -x examplespec/ColorRing.prot -param N 3..5 -o tmp/color.prot -o-log tmp/color.log</code></pre>
 <p class="cram">If these log files are not desired, simply do not give the flag.</p>
 <p>To control the number of threads used at runtime, simply give a number after the <b>-parallel</b> flag.
 For example, imagine we want to use exactly <i>2</i> threads.</p>
-<pre><code>./bin/protocon -parallel 2 -x examplespec/ColorRing.prot -def N 5</code></pre>
-<h3 id="sec:ColorRingDistrib">2. Distributed 3-Coloring on a Ring</h3>
+<pre><code>./bin/protocon -parallel 2 -x examplespec/ColorRing.prot -param N 5</code></pre>
+<h2 id="sec:ColorRingDistrib">2. Distributed 3-Coloring on a Ring</h2>
 <p><b>ColorRingDistrib.</b>
 (<a href="./../examplespec/ColorRingDistrib.prot">spec</a>,
 <a href="./../examplesett/ColorRingDistrib.args">args</a>,
 <a href="./../examplesoln/ColorRingDistrib.prot">soln</a>)</p>
-<h3 id="sec:ColorRingLocal">3. Distance-2 5-Coloring on a Ring</h3>
+<h2 id="sec:ColorRingLocal">3. Distance-2 5-Coloring on a Ring</h2>
 <p><b>ColorRingLocal.</b>
 (<a href="./../examplespec/ColorRingLocal.prot">spec</a>,
 <a href="./../examplesett/ColorRingLocal.args">args</a>,

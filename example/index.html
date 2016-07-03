@@ -49,7 +49,7 @@ tr.hline { border-top: thin solid black; }
 <h1>Example List</h1>
 </div>
 <p>Example files are given in three directories: (1) <a href="./../examplespec">examplespec</a> contains problem specifications, (2) <a href="./../examplesoln">examplesoln</a> contains solutions, and (3) <a href="./../examplesynt">examplesynt</a> contains solutions which retain artifacts from the specification.
-For each file in <a href="./../examplesynt">examplesynt</a>, there is usually a corresponding file in <a href="./../examplesoln">examplesoln</a> which is more presentable and simpler to verify.</p><h3>Contents</h3>
+For each file in <a href="./../examplesynt">examplesynt</a>, there is usually a corresponding file in <a href="./../examplesoln">examplesoln</a> which is more presentable and simpler to verify.</p><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:1">Sum-Not-2</a></li>
 <li><a href="#sec:2">Coloring</a></li>
@@ -58,13 +58,13 @@ For each file in <a href="./../examplesynt">examplesynt</a>, there is usually a 
 <li><a href="#sec:5">Orientation</a></li>
 <li><a href="#sec:6">Token Passing</a></li>
 <li><a href="#sec:7">Other</a></li></ol>
-<h3 id="sec:1">1. Sum-Not-2</h3>
+<h2 id="sec:1">1. Sum-Not-2</h2>
 <p>Aly Farahat's <a href="http://digitalcommons.mtu.edu/etds/178">dissertation</a> includes a simple yet nontrivial unidirectional ring protocol.
 It has been extremely helpful for reasoning about the nature of <a href="http://dx.doi.org/10.1007/978-3-319-03089-0_12">livelocks in unidirectional rings</a> and has a simple enough transition system to actually show in a presentation.</p><ul class="cram"><li> SumNotTwo (<a href="./../examplespec/SumNotTwo.prot">spec</a>)</li>
 <li> SumNotTarget (<a href="./../examplespec/SumNotTarget.prot">spec</a>, <a href="./../examplesoln/SumNotTarget.prot">soln</a>)
 - The general case sum-not-<i>(l-1)</i> protocol given by Farahat.</li>
 </ul>
-<h3 id="sec:2">2. Coloring</h3>
+<h2 id="sec:2">2. Coloring</h2>
 <p><a href="http://en.wikipedia.org/wiki/Graph_coloring">Graph coloring</a> is a well-known problem with many applications.
 Each node in the graph is assigned a color.
 For this assignment to be called a  <i>coloring</i>, each node must have a different color than the nodes adjacent to it.
@@ -97,7 +97,7 @@ or
 (even with <a href="./../examplespec/ColorKautzBi.prot">bidirectional edges</a>)
 gives definite impossibility results at around <i>8</i> processes.</li>
 </ul>
-<h3 id="sec:3">3. Maximal Matching</h3>
+<h2 id="sec:3">3. Maximal Matching</h2>
 <p><a href="http://en.wikipedia.org/wiki/Matching_(graph_theory)">Matching</a> is well-known problem from graph theory.
 A matching is a set of edges which do not share any common vertices.
 For a matching to be  <i>maximal</i>, it must be impossible to add another edge to the set without breaking the matching property.</p><ul class="cram"><li> MatchRing <a href="Matching.html#sec:MatchRing">[info]</a>
@@ -110,14 +110,14 @@ This gives the 1-bit solution.</li>
 <li> SegmentRing <a href="Matching.html#sec:SegmentRing">[info]</a>
 - A problem similar to matching where a ring is segmented into chains.</li>
 </ul>
-<h3 id="sec:4">4. Sorting on Chains and Rings</h3><ul><li> SortChain (<a href="./../examplespec/SortChain.prot">spec</a>, <a href="./../examplesoln/SortChain.prot">soln</a>)
+<h2 id="sec:4">4. Sorting on Chains and Rings</h2><ul><li> SortChain (<a href="./../examplespec/SortChain.prot">spec</a>, <a href="./../examplesoln/SortChain.prot">soln</a>)
 - Sorting a chain of values.
 Easy to synthesize, but solution is manually simplified.</li>
 <li> SortRing (<a href="./../examplespec/SortRing.prot">spec</a>, <a href="./../examplesoln/SortRing.prot">soln</a>)
 - Sorting a ring of values using a unique zero value to mark the beginning of the sequence.
 Easy to synthesize, but solution is manually simplified.</li>
 </ul>
-<h3 id="sec:5">5. Orientation</h3><ul><li> OrientDaisy <a href="Orientation.html#sec:OrientDaisy">[info]</a>
+<h2 id="sec:5">5. Orientation</h2><ul><li> OrientDaisy <a href="Orientation.html#sec:OrientDaisy">[info]</a>
 - Silent orientation for daisy chains (either ring and chain), verified for <i>2</i> to <i>15</i> processes.
 The version in <a href="./../examplesoln">examplesoln</a> behaves similarly, is simpler, but is slightly less optimal.</li>
 <li> OrientRing <a href="Orientation.html#sec:OrientRing">[info]</a>
@@ -128,7 +128,7 @@ Also works under synchronous scheduler.</li>
 <li> OrientRingViaToken (<a href="./../examplespec/OrientRingViaToken.prot">spec</a>, <a href="./../examplesoln/OrientRingViaToken.prot">soln</a>)
 - From <a href="http://dx.doi.org/10.1006/inco.1993.1029">Israeli and Jalfon</a>.</li>
 </ul>
-<h3 id="sec:6">6. Token Passing</h3><ul><li> TokenRingFiveState <a href="TokenPassing.html#sec:TokenRingFiveState">[info]</a>
+<h2 id="sec:6">6. Token Passing</h2><ul><li> TokenRingFiveState <a href="TokenPassing.html#sec:TokenRingFiveState">[info]</a>
 - 5-state token ring whose behavior is specified with shadow variables.</li>
 <li> TokenRingSixState <a href="TokenPassing.html#sec:TokenRingSixState">[info]</a>
 - 6-state token ring specified with variable superposition.</li>
@@ -150,7 +150,7 @@ One solution is from Dijkstra, the other is from <a href="http://citeseerx.ist.p
 <li> TokenRingOdd (<a href="./../examplespec/TokenRingOdd.prot">spec</a>, <a href="./../examplesoln/TokenRingOdd.prot">soln</a>)
 - Randomized token passing protocol on odd-sized rings.</li>
 </ul>
-<h3 id="sec:7">7. Other</h3><ul><li> ByzantineGenerals (<a href="./../examplespec/ByzantineGenerals.prot">spec</a>, <a href="./../examplesoln/ByzantineGenerals.prot">soln</a>)
+<h2 id="sec:7">7. Other</h2><ul><li> ByzantineGenerals (<a href="./../examplespec/ByzantineGenerals.prot">spec</a>, <a href="./../examplesoln/ByzantineGenerals.prot">soln</a>)
 - The Byzantine generals problem formulated as an instance of self-stabilization.</li>
 <li> DiningCrypto (<a href="./../examplespec/DiningCrypto.prot">spec</a>, <a href="./../examplesoln/DiningCrypto.prot">soln</a>)
 - The dining cryptographers problem as an instance of self-stabilization, where the initial state is assumed to randomize the coins.

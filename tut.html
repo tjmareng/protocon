@@ -54,7 +54,7 @@ Next, open up a terminal, navigate to the download location, unzip it, and enter
 <pre class="cram"><code>cd ~/Downloads
 unzip protocon-bin-YYYYMMDD.zip
 cd protocon-bin-YYYYMMDD</code></pre>
-<p class="cram">Where <code>YYYYMMDD</code> is the current version number.</p><h3>Contents</h3>
+<p class="cram">Where <code>YYYYMMDD</code> is the current version number.</p><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:1">Coloring</a></li>
 <li><a href="#sec:2">Maximal Matching</a></li>
@@ -62,7 +62,7 @@ cd protocon-bin-YYYYMMDD</code></pre>
 <li><a href="#sec:4">Sum-Not-Odd</a></li>
 <li><a href="#sec:5">Maximal Matching with Shadow/Puppet Synthesis</a></li>
 <li><a href="#sec:6">Next Steps</a></li></ol>
-<h3 id="sec:1">1. Coloring</h3>
+<h2 id="sec:1">1. Coloring</h2>
 <p>The file <a href="./examplespec/ColorRing.prot">examplespec/ColorRing.prot</a> specifies a bidirectional ring topology where each process wishes to obtain a different value than its two neighbors.
 Each process has <i>3</i> colors to choose from.
 We can synthesize actions for this protocol by issuing the command:</p>
@@ -92,7 +92,7 @@ The forward and backward transitions are also restricted.
 To see this, click one of the <b>Forward</b> transitions or the <b>Step Forward</b> button a few times until the state no longer changes.
 The system has not yet formed a valid coloring!
 Clicking the <b>or</b> or <b>true</b> radio button for the <b>invariant</b> predicate reveals a final transition (or two) to reach the invariant.</p>
-<h3 id="sec:2">2. Maximal Matching</h3>
+<h2 id="sec:2">2. Maximal Matching</h2>
 <p>The file <a href="./examplespec/MatchRingThreeState.prot">examplespec/MatchRingThreeState.prot</a> specifies a bidirectional ring topology where each process wishes to match with one of its neighbors.
 When  <span class="ttvbl">x[i]</span> is <i>0</i> or <i>2</i>, process  <span class="ttvbl">P[i]</span> is pointing to  <span class="ttvbl">P[i-1]</span> or  <span class="ttvbl">P[i+1]</span> respectively.
 Two processes are matched together when they point to each other.
@@ -111,7 +111,7 @@ Close the GUI.</p>
 <p>To fix this, we must synthesize a protocol that stabilizes for rings of multiple sizes.
 Let's do this for rings of size <i>3</i>, <i>4</i>, and <i>5</i>.</p>
 <pre class="cram"><code>./bin/protocon -x examplespec/MatchRingThreeState.prot -o tmp/match.prot -def N 3 -param N 4 -param N 5</code></pre>
-<h3 id="sec:3">3. Sum-Not-2</h3>
+<h2 id="sec:3">3. Sum-Not-2</h2>
 <p>The file <a href="./examplespec/SumNotTwo.prot">examplespec/SumNotTwo.prot</a> specifies a unidirectional ring topology where we do not want the sum of any two consecutive values to equal <i>2</i>.
 Open the file in the GUI and add the following three actions at the end of the process block:</p>
 <pre class="cram"><code>  puppet action:
@@ -127,7 +127,7 @@ Open the file in the GUI and add the following three actions at the end of the p
  </li>
 </ul></li>
 </ol>
-<h3 id="sec:4">4. Sum-Not-Odd</h3>
+<h2 id="sec:4">4. Sum-Not-Odd</h2>
 <p>Consider a sum-not-odd protocol on a unidirectional ring which stabilizes to states where the sum of any two consecutive numbers is even.
 We will see how Protocon can optimize performance and also help with manual construction of a protocol.</p>
 <p>Try the following:</p><ol class="cram"><li> Specify the sum-not-odd problem using <a href="./examplespec/SumNotTwo.prot">examplespec/SumNotTwo.prot</a> as a template.
@@ -162,7 +162,7 @@ One problem is that randomization is used during synthesis, which gives a random
 <li> Repeat step <i>1</i>.</li>
 <li> Looking at these protocols, can you devise a sum-not-odd protocol that stabilizes for any domain size <i>M</i>?</li>
 </ol>
-<h3 id="sec:5">5. Maximal Matching with Shadow/Puppet Synthesis</h3>
+<h2 id="sec:5">5. Maximal Matching with Shadow/Puppet Synthesis</h2>
 <p>In graph theory, maximal matching is defined in terms of edges rather than nodes (i.e., processes).
 We would like to do the same, but placing a variable between each process is unrealistic in a distributed system.</p>
 <p>Using shadow puppetry as a metaphor, we can split the concept of desired behavior away from implementation.
@@ -178,7 +178,7 @@ Generally, the invariant and behavior constraints should only apply for some val
 Notice that the  <span class="ttvbl">e</span> values are fully derived from  <span class="ttvbl">x</span> values.
 Therefore, the protocol can be implemented without  <span class="ttvbl">e</span> values at all!
 See <a href="./examplesoln/MatchRingOneBit.prot">examplesoln/MatchRingOneBit.prot</a> for this transformation.</p>
-<h3 id="sec:6">6. Next Steps</h3>
+<h2 id="sec:6">6. Next Steps</h2>
 <p>This concludes the tutorial.
 To see what else is possible (beyond silent protocols on rings), browse our ever-growing list of example protocols.
 For a complete feature list (such as the <b>-parallel</b> or <b>-x-args</b> options), browse the manual page.</p><ul><li> <a href='example/index.html'>example/index.html</a> - List of example files.</li>

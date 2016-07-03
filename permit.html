@@ -47,18 +47,18 @@ tr.hline { border-top: thin solid black; }
 <body>
 <div class="cjust">
 <h1>Action Syntax</h1>
-</div><h3>Contents</h3>
+</div><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:1">Self-Loop Removal (<code>-=&gt;</code>)</a></li>
 <li><a href="#sec:2">Disallowing Actions (<code>permit</code> / <code>forbid</code>)</a></li>
 <li><a href="#sec:3">Randomizing Variables (<code>x[i]:=_;</code>)</a></li></ol>
-<h3 id="sec:1">1. Self-Loop Removal (<code>-=&gt;</code>)</h3>
+<h2 id="sec:1">1. Self-Loop Removal (<code>-=&gt;</code>)</h2>
 <p>The <code>-=&gt;</code> operator can be used in place of <code>--&gt;</code> to automatically remove transitions that would result in a self-loop.
 This often helps with readability.
 For example, the following two actions are equivalent:</p>
 <pre class="cram"><code>( x[i-1]==1 &amp;&amp; x[i+1]==1 -=&gt; x[i]:=2; )
 ( x[i-1]==1 &amp;&amp; x[i]!=2 &amp;&amp; x[i+1]==1 --&gt; x[i]:=2; )</code></pre>
-<h3 id="sec:2">2. Disallowing Actions (<code>permit</code> / <code>forbid</code>)</h3>
+<h2 id="sec:2">2. Disallowing Actions (<code>permit</code> / <code>forbid</code>)</h2>
 <p>The <code>permit</code> and <code>forbid</code> keywords are used to specify the forms of allowed and disallowed actions available to synthesis.
 If <code>permit</code> does not appear, then it is equivalent to permitting all actions.
 If <code>forbid</code> appears, then the specified form may not be used, even if it matches a <code>permit</code> statement.</p>
@@ -83,7 +83,7 @@ When using <code>permit</code> or <code>forbid</code>, synthesis may find a prot
 This is necessary for the dining philosophers because a philosopher must be able to perform multiple actions in sequence: pick up a chopstick, pick up the other, finish being hungry, set down a chopstick, and set down the other.
 However, you may wish to use <code>permit</code> and <code>forbid</code> to give hints to synthesis.
 In this case, use the <b>-disabling</b> flag to enforce self-disabling processes.</p>
-<h3 id="sec:3">3. Randomizing Variables (<code>x[i]:=_;</code>)</h3>
+<h2 id="sec:3">3. Randomizing Variables (<code>x[i]:=_;</code>)</h2>
 <p>When a variable is marked with <code>random write</code>, it is assigned randomly by a process without violating safety constraints (e.g., closure).
 In the <a href="./examplesoln/ColorUniRing.prot">unidirectional ring coloring</a> protocol, the following action is used to randomly select a value for <code>x[i]</code> that differs from <code>x[i-1</code>.</p>
 <pre class="cram"><code>( x[i-1]==x[i] --&gt; x[i]:=_; )</code></pre>

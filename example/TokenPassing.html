@@ -49,7 +49,7 @@ tr.hline { border-top: thin solid black; }
 <h1>Token Passing</h1>
 </div>
 <p>Token passing systems are used for distributed mutual exclusion, where exactly one process has a  <i>token</i> at any given time, and the token must be passed in order for other processes to have this privilege.
-In the context of self-stabilization, the system may be in a state with multiple tokens, and it therefore must converge to having a single token.</p><h3>Contents</h3>
+In the context of self-stabilization, the system may be in a state with multiple tokens, and it therefore must converge to having a single token.</p><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:TokenRingDijkstra">Dijkstra's Token Ring</a></li>
 <li><a href="#sec:TokenRingFiveState">5-State Token Ring</a></li>
@@ -62,12 +62,12 @@ In the context of self-stabilization, the system may be in a state with multiple
 <li><a href="#sec:TokenRingThreeState">3-State Token Ring (Dijkstra)</a></li>
 <li><a href="#sec:TokenChainThreeState">3-State Token Chain</a></li>
 <li><a href="#sec:TokenChainDijkstra">4-State Token Chain (Dijkstra)</a></li></ol>
-<h3 id="sec:TokenRingDijkstra">1. Dijkstra's Token Ring</h3>
+<h2 id="sec:TokenRingDijkstra">1. Dijkstra's Token Ring</h2>
 <p><b>TokenRingDijkstra.</b>
 (<a href="./../examplespec/TokenRingDijkstra.prot">spec</a>,
 <a href="./../examplesett/TokenRingDijkstra.prot">args</a>,
 <a href="./../examplesoln/TokenRingDijkstra.prot">soln</a>)</p>
-<h3 id="sec:TokenRingFiveState">2. 5-State Token Ring</h3>
+<h2 id="sec:TokenRingFiveState">2. 5-State Token Ring</h2>
 <p><b>TokenRing.</b>
 (<a href="./../examplespec/TokenRing.prot">spec</a>,
 <a href="./../examplesett/TokenRingFiveState.args">args</a>,
@@ -76,13 +76,13 @@ In the context of self-stabilization, the system may be in a state with multiple
 <p>This is a unidirectional token ring that has 5 states per process.
 Without using randomization, no smaller token ring exists.
 Interestingly, we can still pass a token with every action in the invariant.</p>
-<h3 id="sec:TokenRingSixState">3. 6-State Token Ring</h3>
+<h2 id="sec:TokenRingSixState">3. 6-State Token Ring</h2>
 <p><b>TokenRingSixState.</b>
 (<a href="./../examplespec/TokenRingSuperpos.prot">spec</a>,
 <a href="./../examplesett/TokenRingSixState.args">args</a>,
 <a href="./../examplesynt/TokenRingSuperpos.prot">synt</a>,
 <a href="./../examplesoln/TokenRingSixState.prot">soln</a>)</p>
-<h3 id="sec:TokenRingThreeBit">4. 3-Bit Token Ring</h3>
+<h2 id="sec:TokenRingThreeBit">4. 3-Bit Token Ring</h2>
 <p><b>TokenRingThreeBit.</b>
 (<a href="./../examplespec/TokenRingThreeBit.prot">spec</a>,
 <a href="./../examplesett/TokenRingThreeBit.args">args</a>,
@@ -92,7 +92,7 @@ Interestingly, we can still pass a token with every action in the invariant.</p>
 Gouda and Haddix in  <i>The Stabilizing Token Ring in Three Bits</i>.
 It uses 8 states per process.
 Not every action in the invariant passes a token, which causes a noticeable lag for larger rings.</p>
-<h4 id="sec:4.1">4.1. Problem Instance</h4>
+<h3 id="sec:4.1">4.1. Problem Instance</h3>
 <pre><code>
 constant N := 3;
 
@@ -119,10 +119,8 @@ process Bot[i &lt;- Nat % 1]
   shadow action: ( t[i-1] == t[i] --&gt; t[i] := 1 - t[i-1]; );
 }
 
-process P[j &lt;- Nat % (N-1)]
+process P[i &lt;- 1 + Nat % (N-1)]
 {
-  let i := j+1; // We really want P[1],...,P[N-1] rather than P[0],...,P[N-2].
-
   read:  e[i-1], t[i-1];
   write: e[i], t[i], ready[i];
 
@@ -135,7 +133,7 @@ process P[j &lt;- Nat % (N-1)]
 There is a distinguished process  <span class="ttvbl">Bot</span> which can act differently than the others.</p>
 <p>The invariant is specified as all states where exactly one process has a token. <span class="ttvbl">Bot</span> is defined to have a token when <code>t[0] == t[N-1]</code> and each other  <span class="ttvbl">P</span> process has a token when <code>t[i] != t[i-1]</code>.</p>
 <p>With the shadow actions, we enforce that processes act like Dijkstra's token ring on one bit (the  <span class="ttvbl">t</span> variables).</p>
-<h4 id="sec:4.2">4.2. Synthesis</h4>
+<h3 id="sec:4.2">4.2. Synthesis</h3>
 <p>Let's try to find a stabilizing token ring using three bits on a ring of size <i>5</i>.</p>
 <pre class="cram"><code>protocon -x examplespec/TokenRingThreeBit.prot -o tmp/3bit.prot -def N 5</code></pre>
 <p>Is the protocol stabilizing on a ring of size <i>3</i>?</p>
@@ -149,7 +147,7 @@ Let's try again, taking those sizes into account!</p>
 <p>But what if we want to search up to size <i>7</i>, but it takes too long check a system of that size at each decision level?
 Use the <b>-no-partial</b> flag to just verify the protocol on that system after finding a protocol which is self-stabilizing for all smaller sizes.</p>
 <pre class="cram"><code>protocon -x examplespec/TokenRingThreeBit.prot -o tmp/3bit.prot -def N 5 -param N 3 -param N 4 -param N 6 -param [ -def N 7 -no-partial ]</code></pre>
-<h4 id="sec:4.3">4.3. Stabilizing Version</h4>
+<h3 id="sec:4.3">4.3. Stabilizing Version</h3>
 <pre><code>
 // Three bit token ring defined in
 // Title: The Stabilizing Token Ring in Three Bits
@@ -204,9 +202,8 @@ process Bot[i &lt;- Int % 1]
     );
 }
 
-process P[j &lt;- Int % (N-1)]
+process P[i &lt;- 1 + Int % (N-1)]
 {
-  let i := j+1;
   read:  e[i-1], t[i-1];
   write: e[i], t[i], ready[i];
 
@@ -229,7 +226,7 @@ process P[j &lt;- Int % (N-1)]
 }
 
 </code></pre>
-<h3 id="sec:TokenRingThreeState">5. 3-State Token Ring (Dijkstra)</h3>
+<h2 id="sec:TokenRingThreeState">5. 3-State Token Ring (Dijkstra)</h2>
 <p><b>TokenRingThreeState.</b>
 (<a href="./../examplespec/TokenRingThreeState.prot">spec</a>,
 <a href="./../examplesett/TokenRingThreeState.args">args</a>,
@@ -237,7 +234,7 @@ process P[j &lt;- Int % (N-1)]
 <a href="./../examplesoln/TokenRingThreeState.prot">soln</a>)</p>
 <p>This ring is bidirectional, and passes the token back-and-forth.
 Every action in the invariant passes a token.</p>
-<h3 id="sec:TokenChainThreeState">6. 3-State Token Chain</h3>
+<h2 id="sec:TokenChainThreeState">6. 3-State Token Chain</h2>
 <p><b>TokenChainThreeState.</b>
 (<a href="./../examplespec/TokenChain.prot">spec</a>,
 <a href="./../examplesett/TokenChainThreeState.args">args</a>,
@@ -246,7 +243,7 @@ Every action in the invariant passes a token.</p>
 <p>This is a bidirectional chain that passes the token back-and-forth.
 It uses 3 states per process.
 Not every action in the invariant passes a token, but the actions that do not pass the token can be run in parallel with the token-passing ones, so the performance hit is small.</p>
-<h3 id="sec:TokenChainDijkstra">7. 4-State Token Chain (Dijkstra)</h3>
+<h2 id="sec:TokenChainDijkstra">7. 4-State Token Chain (Dijkstra)</h2>
 <p><b>TokenChainDijkstra.</b>
 (<a href="./../examplespec/TokenChainDijkstra.prot">spec</a>,
 <a href="./../examplesynt/TokenChainDijkstra.prot">synt</a>,

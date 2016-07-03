@@ -47,7 +47,7 @@ tr.hline { border-top: thin solid black; }
 <body>
 <div class="cjust">
 <h1>Orientation on Odd-Sized Rings</h1>
-</div><h3>Contents</h3>
+</div><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:OrientRing">Ring Orientation</a></li>
 <li><a href="#sec:OrientRingOdd">Odd-Sized Ring Orientation</a>
@@ -55,19 +55,19 @@ tr.hline { border-top: thin solid black; }
 <li><a href="#sec:2.1">Problem Instance</a></li>
 <li><a href="#sec:2.2">Stabilizing Version</a></li></ol></li>
 <li><a href="#sec:OrientDaisy">Daisy Chain Orientation</a></li></ol>
-<h3 id="sec:OrientRing">1. Ring Orientation</h3>
+<h2 id="sec:OrientRing">1. Ring Orientation</h2>
 <p><b>OrientRing.</b>
 (<a href="./../examplespec/OrientRing.prot">spec</a>,
 <a href="./../examplesett/OrientRing.args">args</a>,
 <a href="./../examplesoln/OrientRing.prot">soln</a>)</p>
-<h3 id="sec:OrientRingOdd">2. Odd-Sized Ring Orientation</h3>
+<h2 id="sec:OrientRingOdd">2. Odd-Sized Ring Orientation</h2>
 <p><b>OrientRingOdd.</b>
 (<a href="./../examplespec/OrientRingOdd.prot">spec</a>,
 <a href="./../examplesett/OrientRingOdd.args">args</a>,
 <a href="./../examplesoln/OrientRingOdd.prot">soln</a>)</p>
 <p>The <i>examplespec/OddOrientRing.prot</i> file specifies a bidirectional ring topology where processes wish to agree with each other on a direction around the ring.
 The topology is taken from the paper by Hoepman titled  <i>Uniform Deterministic Self-Stabilizing Ring-Orientation on Odd-Length Rings</i>.</p>
-<h4 id="sec:2.1">2.1. Problem Instance</h4>
+<h3 id="sec:2.1">2.1. Problem Instance</h3>
 <pre><code>
 // Ring orientation using the state-reading model.
 // See examplesoln/OrientRingOdd.prot for the stabilizing version.
@@ -105,7 +105,7 @@ That is, we want each process to agree on a direction.</p>
 <p>The  <span class="ttvbl">color</span> and  <span class="ttvbl">phase</span> variables are labeled as <code>puppet</code> because we allow the protocol to use them to achieve convergence.</p>
 <p>The invariant is labeled as <code>((future &amp; shadow) % puppet)</code> since we only require closure within a new invariant <i>I'</i> rather than <i>I</i>.
 Also, the behavior of the protocol within the new invariant <i>I'</i> must be the same as the underlying (i.e., shadow) protocol within <i>I</i>.</p>
-<h4 id="sec:2.2">2.2. Stabilizing Version</h4>
+<h3 id="sec:2.2">2.2. Stabilizing Version</h3>
 <pre><code>
 // Ring orientation protocol using the state-reading model defined in
 // Title: Uniform Deterministic Self-Stabilizing Ring-Orientation on Odd-Length Rings
@@ -166,7 +166,7 @@ process P[i &lt;- Nat % N]
 }
 
 </code></pre>
-<h3 id="sec:OrientDaisy">3. Daisy Chain Orientation</h3>
+<h2 id="sec:OrientDaisy">3. Daisy Chain Orientation</h2>
 <p><b>OrientDaisy.</b>
 (<a href="./../examplespec/OrientDaisy.prot">spec</a>,
 <a href="./../examplesett/OrientDaisy.args">args</a>,

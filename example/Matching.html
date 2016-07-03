@@ -50,7 +50,7 @@ tr.hline { border-top: thin solid black; }
 </div>
 <p><a href="http://en.wikipedia.org/wiki/Matching_(graph_theory)">Matching</a> is well-known problem from graph theory.
 A matching is a set of edges which do not share any common vertices.
-For a matching to be  <i>maximal</i>, it must be impossible to add another edge to the set without breaking the matching property.</p><h3>Contents</h3>
+For a matching to be  <i>maximal</i>, it must be impossible to add another edge to the set without breaking the matching property.</p><p>Contents</p>
 <ol class="cram">
 <li><a href="#sec:MatchRing">1-Bit Maximal Matching on a Ring</a></li>
 <li><a href="#sec:MatchRingThreeState">3-State Maximal Matching on a Ring</a>
@@ -58,7 +58,7 @@ For a matching to be  <i>maximal</i>, it must be impossible to add another edge 
 <li><a href="#sec:MatchRingOneBit">Deriving 1-Bit Protocol from 3-State Protocol</a></li>
 <li><a href="#sec:2.2">Using Shadow/Puppet Variables</a></li></ol></li>
 <li><a href="#sec:SegmentRing">Segmented Ring</a></li></ol>
-<h3 id="sec:MatchRing">1. 1-Bit Maximal Matching on a Ring</h3>
+<h2 id="sec:MatchRing">1. 1-Bit Maximal Matching on a Ring</h2>
 <p><b>MatchRing.</b>
 (<a href="./../examplespec/MatchRing.prot">spec</a>,
 <a href="./../examplesett/MatchRing.args">args</a>,
@@ -92,7 +92,7 @@ These edges are not consecutive and at least on of every <i>3</i> will be select
    x[i-1]==1 &amp;&amp; x[i]==0               // P[i] matched with P[i-1]
 || x[i-1]==0 &amp;&amp; x[i]==0 &amp;&amp; x[i+1]==1  // P[i] is not matched
 ||              x[i]==1 &amp;&amp; x[i+1]==0  // P[i] matched with P[i+1]</code></pre>
-<h3 id="sec:MatchRingThreeState">2. 3-State Maximal Matching on a Ring</h3>
+<h2 id="sec:MatchRingThreeState">2. 3-State Maximal Matching on a Ring</h2>
 <p><b>MatchRingThreeState.</b>
 (<a href="./../examplespec/MatchRingThreeState.prot">spec</a>,
 <a href="./../examplesett/MatchRingThreeState.args">args</a>,
@@ -109,7 +109,7 @@ The processes form a maximal matching when they point to each other or themselve
 <pre class="cram"><code>( m[i-1]==2 &amp;&amp; m[i]!=0 &amp;&amp; m[i+1]!=0 --&gt; m[i]:=0; )
 ( m[i-1]!=2 &amp;&amp; m[i]!=1 &amp;&amp; m[i+1]==2 --&gt; m[i]:=1; )
 ( m[i-1]!=2 &amp;&amp; m[i]!=2 &amp;&amp; m[i+1]!=2 --&gt; m[i]:=2; )</code></pre>
-<h4 id="sec:MatchRingOneBit">2.1. Deriving 1-Bit Protocol from 3-State Protocol</h4>
+<h3 id="sec:MatchRingOneBit">2.1. Deriving 1-Bit Protocol from 3-State Protocol</h3>
 <p><b>MatchRingOneBit.</b>
 (<a href="./../examplespec/MatchRingOneBit.prot">spec</a>,
 <a href="./../examplesynt/MatchRingOneBit.prot">synt</a>,
@@ -200,11 +200,11 @@ process P[i &lt;- Nat % N]
     ;
 }
 </code></pre>
-<h4 id="sec:2.2">2.2. Using Shadow/Puppet Variables</h4>
+<h3 id="sec:2.2">2.2. Using Shadow/Puppet Variables</h3>
 <p>Shadow variables are variables that cannot be used in the guard of any actions.
 Therefore, to reliably obtain a protocol that is free of <i>m</i> variables, we must mark them as shadow variables by replacing <code>direct</code> with <code>shadow</code> in the <a href="./../examplespec/MatchRingOneBit.prot">specification</a>.
 This is essentially what is done in the <a href="#sec:MatchRing">previous section</a>, but a more convenient invariant is used.</p>
-<h3 id="sec:SegmentRing">3. Segmented Ring</h3>
+<h2 id="sec:SegmentRing">3. Segmented Ring</h2>
 <p><b>SegmentRing.</b>
 (<a href="./../examplespec/SegmentRing.prot">spec</a>,
 <a href="./../examplesett/SegmentRing.args">args</a>,
