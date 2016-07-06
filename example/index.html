@@ -70,7 +70,7 @@ Each node in the graph is assigned a color.
 For this assignment to be called a  <i>coloring</i>, each node must have a different color than the nodes adjacent to it.
 In a computer network, a coloring applies to processes that communicate directly with each other rather than nodes connected by edges.</p><ul class="cram"><li> ColorRing <a href="Coloring.html#sec:ColorRing">[info]</a>
 - 3-coloring on a ring.</li>
-<li> ColorRingSymm (<a href="./../examplespec/ColorRingSymm.prot">spec</a>, <a href="./../examplesoln/ColorRingSymm.prot">soln</a>)
+<li> ColorRingDizzy (<a href="./../examplespec/ColorRingDizzy.prot">spec</a>, <a href="./../examplesoln/ColorRingDizzy.prot">soln</a>)
 - Unoriented ring.</li>
 <li> ColorUniRing (<a href="./../examplespec/ColorUniRing.prot">spec</a>, <a href="./../examplesoln/ColorUniRing.prot">soln</a>)
 - Randomized 3-coloring on a unidirectional ring.</li>
@@ -93,7 +93,7 @@ We can find a protocol that stabilizes for up to <i>13</i> processes, but not <i
 Tweaking the topology by
 <a href="./../examplespec/ColorKautzReverse.prot">reversing edges</a>
 or
-<a href="./../examplespec/ColorKautzSymm.prot">removing orientation</a>
+<a href="./../examplespec/ColorKautzDizzy.prot">removing orientation</a>
 (even with <a href="./../examplespec/ColorKautzBi.prot">bidirectional edges</a>)
 gives definite impossibility results at around <i>8</i> processes.</li>
 </ul>
@@ -107,6 +107,8 @@ This gives the 1-bit solution.</li>
 - Maximal matching on a ring where processes point in certain directions.</li>
 <li> MatchRingOneBit <a href="Matching.html#sec:MatchRingOneBit">[info]</a>
 - Using the 3-state specification, find a matching using 1 bit per process.</li>
+<li> MatchRingDizzy (<a href="./../examplespec/MatchRingDizzy.prot">spec</a>, <a href="./../examplesett/MatchRingDizzy.args">args</a>)
+- Maximal matching on an unoriented ring.</li>
 <li> SegmentRing <a href="Matching.html#sec:SegmentRing">[info]</a>
 - A problem similar to matching where a ring is segmented into chains.</li>
 </ul>

@@ -96,20 +96,20 @@ Not every action in the invariant passes a token, which causes a noticeable lag 
 <pre><code>
 constant N := 3;
 
-direct variable t[Nat % N] &lt;- Nat % 2;
-puppet variable e[Nat % N] &lt;- Nat % 2;
-puppet variable ready[Nat % N] &lt;- Nat % 2;
+direct variable t[N] &lt; 2;
+puppet variable e[N] &lt; 2;
+puppet variable ready[N] &lt; 2;
 
 // Converge to a state where one process has the token and execute the
 // shadow protocol defined by the 'shadow action:' statements below.
 (future &amp; shadow)
-  (unique i &lt;- Nat % N :
+  (unique i &lt; N :
    i == 0 &amp;&amp; t[i-1] == t[i]  // Bot has the token
    ||
    i != 0 &amp;&amp; t[i-1] != t[i]  // P[i] has the token
   );
 
-process Bot[i &lt;- Nat % 1]
+process Bot[i &lt; 1]
 {
   // i==0
   read:  e[i-1], t[i-1];
@@ -119,7 +119,7 @@ process Bot[i &lt;- Nat % 1]
   shadow action: ( t[i-1] == t[i] --&gt; t[i] := 1 - t[i-1]; );
 }
 
-process P[i &lt;- 1 + Nat % (N-1)]
+process P[i &lt;- map tid &lt; N-1 : tid+1]
 {
   read:  e[i-1], t[i-1];
   write: e[i], t[i], ready[i];
@@ -156,15 +156,15 @@ Use the <b>-no-partial</b> flag to just verify the protocol on that system after
 
 constant N := 3;
 
-direct variable t[Int % N] &lt;- Int % 2;
-puppet variable e[Int % N] &lt;- Int % 2;
-puppet variable ready[Int % N] &lt;- Int % 2;
+direct variable t[N] &lt; 2;
+puppet variable e[N] &lt; 2;
+puppet variable ready[N] &lt; 2;
 
 // Make the invariant exactly this, no smoothing over puppet variables is allowed.
 (future &amp; shadow)
 (
   // One process has the token.
-  (unique i &lt;- Int % N :
+  (unique i &lt; N :
       i == 0 &amp;&amp; t[i-1] == t[i]
    || i != 0 &amp;&amp; t[i-1] != t[i]
   )
@@ -173,13 +173,13 @@ puppet variable ready[Int % N] &lt;- Int % 2;
   //// This and the actual token-passing behavior are
   //// already enforced by the shadow protocol.
   //// already enforced by the shadow protocol.
-  //(exists i &lt;- Int % N :
+  //(exists i &lt; N :
   //    i == 0 &amp;&amp; e[i-1] == e[i]
   // || i != 0 &amp;&amp; e[i-1] != e[i]
   //)
 );
 
-process Bot[i &lt;- Int % 1]
+process Bot[i &lt; 1]
 {
   read:  e[i-1], t[i-1];
   write: e[i], t[i], ready[i];
@@ -202,7 +202,7 @@ process Bot[i &lt;- Int % 1]
     );
 }
 
-process P[i &lt;- 1 + Int % (N-1)]
+process P[i &lt;- map tid &lt; N-1 : tid+1]
 {
   read:  e[i-1], t[i-1];
   write: e[i], t[i], ready[i];

@@ -130,21 +130,21 @@ constant S := 1;
 constant R := 2;
 
 // Superposed binary variables.
-puppet variable x[Nat % N] &lt;- Nat % 2;
+puppet variable x[N] &lt; 2;
 
 // Underlying ternary variables.
-direct variable m[Nat % N] &lt;- Nat % 3;
+direct variable m[N] &lt; 3;
 
 // The following cases are P[i] pointing
 // to P[i-1], itself, or P[i+1] respectively.
 ((future &amp; silent) % puppet)
-  (forall i &lt;- Nat % N :
+  (forall i &lt; N :
       m[i-1]==R &amp;&amp; m[i]==L
    || m[i-1]==L &amp;&amp; m[i]==S &amp;&amp; m[i+1]==R
    ||              m[i]==R &amp;&amp; m[i+1]==L
   );
 
-process P[i &lt;- Nat % N]
+process P[i &lt; N]
 {
   read: x[i-1];
   write: x[i];
@@ -180,9 +180,9 @@ We know this by looking at how <i>m[i]</i> is changed to be <code>m[i]:=L</code>
 
 constant N := 3;
 
-variable x[Nat % N] &lt;- Nat % 2;
+variable x[N] &lt; 2;
 
-process P[i &lt;- Nat % N]
+process P[i &lt; N]
 {
   read: x[i-1];
   write: x[i];

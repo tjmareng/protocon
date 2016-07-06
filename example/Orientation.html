@@ -74,17 +74,17 @@ The topology is taken from the paper by Hoepman titled  <i>Uniform Deterministic
 
 constant N := 3;
 
-puppet variable color[Nat % N] &lt;- Nat % 2;
-puppet variable phase[Nat % N] &lt;- Nat % 2;
-direct variable way[Nat % (2*N)] &lt;- Nat % 2;
+puppet variable color[N] &lt; 2;
+puppet variable phase[N] &lt; 2;
+direct variable way[(2*N)] &lt; 2;
 
 // Eventually, all processes are pointing in the same direction.
 ((future &amp; shadow) % puppet)
-  (forall i &lt;- Nat % N :
+  (forall i &lt; N :
    way[2*i] == way[2*(i+1)]
   );
 
-process P[i &lt;- Nat % N]
+process P[i &lt; N]
 {
   symmetric (hand_idx, j)  &lt;- {# (2*i, i-1), (2*i+1, i+1) #}
   {
@@ -114,17 +114,17 @@ Also, the behavior of the protocol within the new invariant <i>I'</i> must be th
 
 constant N := 3;
 
-puppet variable color[Nat % N] &lt;- Nat % 2;
-puppet variable phase[Nat % N] &lt;- Nat % 2;
-direct variable way[Nat % (2*N)] &lt;- Nat % 2;
+puppet variable color[N] &lt; 2;
+puppet variable phase[N] &lt; 2;
+direct variable way[(2*N)] &lt; 2;
 
 // Eventually, all processes are pointing in the same direction.
 ((future &amp; shadow) % puppet)
-  (forall i &lt;- Nat % N :
+  (forall i &lt; N :
    way[2*i] == way[2*(i+1)]
   );
 
-process P[i &lt;- Nat % N]
+process P[i &lt; N]
 {
   symmetric (hand_idx, j)  &lt;- {# (2*i, i-1), (2*i+1, i+1) #}
   {

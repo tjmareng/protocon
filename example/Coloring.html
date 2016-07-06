@@ -72,9 +72,9 @@ This is a very simple protocol and is useful for instruction.</p>
 
 constant N := 3;
 
-variable x[Nat % N] &lt;- Nat % 3;
+variable x[N] &lt; 3;
 
-process P[i &lt;- Nat % N]
+process P[i &lt; N]
 {
   read: x[i-1];
   write: x[i];
