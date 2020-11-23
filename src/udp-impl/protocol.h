@@ -28,6 +28,7 @@ typedef unsigned int uint;
 
 static const Bool ShowTimestamps = 1;
 static const Bool ShowCommunication = 0;
+static const Bool ShowBailoutMsg = 0;
 static const Bool UseChecksum = 1;
 static const uint TimeoutMS = 3000;
 static const uint QuickTimeoutMS = 200;
@@ -40,7 +41,7 @@ static const uint32_t ActionLagMS = 0;
 static const char SharedFilePfx[] = "udp-host.";
 
 #define ArraySz( a )  (sizeof(a) / sizeof(*a))
-#define CastOff( T, p ,op, off ) ((T*) ((size_t) (p) op (ptrdiff_t) (off)))
+#define CastOff( T, p, op, off ) ((T*) ((size_t) (p) op (ptrdiff_t) (off)))
 #define IdxEltZ( a, e, elsz ) ((size_t) ((size_t) (e) - (size_t) (a)) / (elsz))
 #define IdxElt( a, e ) IdxEltZ( a, e, sizeof(*a) )
 Bool randomize(void* p, size_t size);

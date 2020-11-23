@@ -64,7 +64,7 @@ static Bool eq_seq (SeqId a, SeqId b) {
 #define BailOut( ret, msg ) \
 do \
 { \
-  failmsg(msg); \
+  if (ShowBailoutMsg) { failmsg(msg); } \
   return ret; \
 } while (0)
 
